@@ -15,7 +15,7 @@ String cameraSize="640x480";
 
 // Frames per second, if available for current camera size
 int fps;
-int desiredFPS=5;
+int desiredFPS=10;
 
 // Sliders
 HScrollBar hueSlider;
@@ -33,13 +33,17 @@ void setup() {
       exit();
     } else {
       // Allow window to resize to camera resolution
-      if (frame != null) {
-        frame.setResizable(true);
+      if (surface != null) {
+        surface.setResizable(true);
       }
-      String chosenCamera="";
+      
       // Chooses the camera
+      String chosenCamera="";
+      
+      // Works only if fps and size information is embedded      
       for(String s:cameras)
       {
+        //println(s);
         if (s.indexOf("size="+cameraSize)!=-1)
         {
           if (chosenCamera=="")
@@ -53,9 +57,14 @@ void setup() {
           }
         }
       }
+      // Attempts to force given size and fps
+      if(chosenCamera==""){        
+        chosenCamera=cameras[0]+",size="+cameraSize+",fps="+desiredFPS;
+      }
       int fpsIndex=chosenCamera.indexOf("fps=")+4;
-      fps=Integer.parseInt(chosenCamera.substring(fpsIndex,fpsIndex+2));
-      println(chosenCamera);
+      println(chosenCamera); 
+      fps=Integer.parseInt(chosenCamera.substring(fpsIndex));
+      
       
       // The camera can be initialized directly using an 
       // element from the array returned by list():
@@ -67,7 +76,7 @@ void setup() {
     img = loadImage(imagename);
     if(img!=null)
     {
-      size((int)(img.width*1.5),img.height);
+      surface.setSize((int)(img.width*1.5),img.height);
       hueSlider = new HScrollBar((img.width*1.1), (img.height*0.2), (img.width*0.3), (img.height*0.03), 1,0,0,0,100,4,0.3); // Initializes slider
       saturationSlider = new HScrollBar((img.width*1.1), (img.height*0.4), (img.width*0.3), (img.height*0.03), 1,1,hueSlider.getHue(),hueSlider.getSaturation(),hueSlider.getBrightness(),4,0.3); // Initializes slider
       brightnessSlider = new HScrollBar((img.width*1.1), (img.height*0.6), (img.width*0.3), (img.height*0.03), 1,2,hueSlider.getHue(),hueSlider.getSaturation(),hueSlider.getBrightness(),4,0.3); // Initializes slider
@@ -103,7 +112,7 @@ void draw() {
       if (!resized)
       {
         println("Camera loaded");
-        frame.setSize((int)(img.width*1.5),img.height);
+        surface.setSize((int)(img.width*1.5),img.height);
         //hueSlider = new HScrollBar((int)(img.width*1.1), (int)(img.height*0.2), (int)(img.width*0.3), (int)(img.height*0.03), 1); // Initializes slider
         hueSlider = new HScrollBar((img.width*1.1), (img.height*0.2), (img.width*0.3), (img.height*0.03), 1,0,360,100,100,4,0.3); // Initializes slider
         saturationSlider = new HScrollBar((img.width*1.1), (img.height*0.4), (img.width*0.3), (img.height*0.03), 1,1,hueSlider.getHue(),hueSlider.getSaturation(),hueSlider.getBrightness(),4,0.3); // Initializes slider
@@ -191,7 +200,7 @@ void draw() {
       if (detectionButton.isPressed()||trackingButton.isPressed())
       {
         DrawMarkers();
-        DrawDebugInfo(); 
+        //DrawDebugInfo(); 
       }
     }
   } 
