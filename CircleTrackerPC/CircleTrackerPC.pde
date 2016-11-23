@@ -23,6 +23,7 @@ HScrollBar saturationSlider;
 HScrollBar brightnessSlider;
 Button detectionButton; // Activates detection of connected components
 Button trackingButton; // Activates tracking of circles
+float wheelCount; // Tracks motion in mouse wheel
 
 void setup() {    
   if (usecam) {
@@ -99,6 +100,11 @@ void setup() {
 //    DrawDebugInfo();
   }
   
+}
+
+// Triggers control bar resize
+void mouseWheel(MouseEvent event) {
+  wheelCount = event.getCount();  
 }
 
 boolean resized=false;
