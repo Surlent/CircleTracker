@@ -29,7 +29,13 @@ void keyPressed(){
     }
     if (key == 'd' || key == 'D') {
        objectSpeed.x+=baseSpeed; 
-    }       
+    }  
+    if (keyCode == CONTROL){
+       objectSpeed.y+=baseSpeed; 
+    }
+    if (key == ' '){
+       objectSpeed.y-=baseSpeed; 
+    }
 }
 
 void keyReleased(){    
@@ -44,7 +50,13 @@ void keyReleased(){
     }
     if (key == 'd' || key == 'D') {
        objectSpeed.x-=baseSpeed; 
-    }        
+    }  
+    if (keyCode == CONTROL){
+       objectSpeed.y-=baseSpeed; 
+    }
+    if (key == ' '){
+       objectSpeed.y+=baseSpeed; 
+    }
 }
 
 void setup() {
@@ -103,13 +115,13 @@ void draw() {
   //perspective();
   
   xAxis.setStroke(color(255,0,0));
-  drawLine(xAxis,new PVector(0,0,0),new PVector(1000,0,0));
+  drawLine(xAxis,new PVector(-1000,0,0),new PVector(1000,0,0));
   
   yAxis.setStroke(color(0,255,0));
-  drawLine(yAxis,new PVector(0,0,0),new PVector(0,1000,0));
+  drawLine(yAxis,new PVector(0,-1000,0),new PVector(0,1000,0));
   
   zAxis.setStroke(color(0,0,255));
-  drawLine(zAxis,new PVector(0,0,0),new PVector(0,0,1000));
+  drawLine(zAxis,new PVector(0,0,-1000),new PVector(0,0,1000));
   
   pushMatrix();
   translate(objectPosition.x,objectPosition.y,objectPosition.z);
