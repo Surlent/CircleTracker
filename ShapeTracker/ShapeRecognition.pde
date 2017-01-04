@@ -10,25 +10,25 @@ void FindCircles()
     int perimeter;
     int area;
     float circularity;
-    foundComp=new Components();
+    foundObjects=new Components();
     
-    for (SegmentList sl : comp) {
+    for (SegmentList sl : connectedComponents) {
       circularity=sl.getCircularity();
       area=sl.getArea();
       
       perimeter=sl.getPerimeter();
       radius=(int)CircleRadiusFromPerimeter(perimeter);
-      minCircularity=AcceptableCircleCircularity(radius,0.7);
-      minArea=AcceptableCircleArea(radius,0.7);
-      maxCircularity=AcceptableCircleCircularity(radius,1.3);
-      maxArea=AcceptableCircleArea(radius,1.3);
+      minCircularity=AcceptableCircleCircularity(radius,0.9);
+      maxCircularity=AcceptableCircleCircularity(radius,1.1);
+      minArea=AcceptableCircleArea(radius,0.9);      
+      maxArea=AcceptableCircleArea(radius,1.1);
       
       if ((perimeter<=maxPerimeter)&&(perimeter>=minPerimeter)&&(area<=maxArea)&&(area>=minArea)&&(circularity<=maxCircularity)&&(circularity>=minCircularity))
       {
-        foundComp.add(sl);
+        foundObjects.add(sl);
       }
     }
-    if(foundComp.size()!=3)
+    if(foundObjects.size()!=3)
     {
       tracking=false;
     }
@@ -44,9 +44,9 @@ void FindSquares()
     int perimeter;
     int area;
     float circularity,minCircularity,maxCircularity;
-    foundComp=new Components();
+    foundObjects=new Components();
     
-    for (SegmentList sl : comp) {
+    for (SegmentList sl : connectedComponents) {
       circularity=sl.getCircularity();
       area=sl.getArea();      
       perimeter=sl.getPerimeter();
@@ -58,10 +58,10 @@ void FindSquares()
       
       if ((perimeter<=maxPerimeter)&&(perimeter>=minPerimeter)&&(area<=maxArea)&&(area>=minArea)&&(circularity<=maxCircularity)&&(circularity>=minCircularity))
       {
-        foundComp.add(sl);
+        foundObjects.add(sl);
       }
     }
-    if(foundComp.size()!=3)
+    if(foundObjects.size()!=3)
     {
       tracking=false;
     }
@@ -179,9 +179,9 @@ void SetCircleTrackingBounds()
 {
   if (tracking)
   {
-    int left=0,top=comp.get(0).get(0).y,w=img.width,h=0;
+    int left=0,top=connectedComponents.get(0).get(0).y,w=img.width,h=0;
     trackingBounds=new ConnectedRectangles();
-    for (SegmentList sl:foundComp)
+    for (SegmentList sl:foundObjects)
     {
      int radius=(int)CircleRadiusFromPerimeter(sl.getPerimeter());
      int estimatedRadius=(int)(radius*1.3);     
@@ -198,8 +198,8 @@ void DrawCircleMarkers()
     //textFont(f,36);
     int j=0;
     int i=0;
-    FillPallette(comp.size());
-    for(SegmentList sl:comp)
+    FillPallette(connectedComponents.size());
+    for(SegmentList sl:connectedComponents)
     {
       stroke(pallette[i++]);
       for (Segment s:sl)
@@ -207,10 +207,10 @@ void DrawCircleMarkers()
         line(s.x0,s.y,s.x1,s.y);
       }
     }
-    if(foundComp!=null)
+    if(foundObjects!=null)
     {
-      FillPallette(foundComp.size());
-      for (SegmentList sl:foundComp)
+      FillPallette(foundObjects.size());
+      for (SegmentList sl:foundObjects)
       {
           int radius=(int)CircleRadiusFromPerimeter(sl.getPerimeter());
           fill(color(255,0,0,100));
@@ -218,20 +218,20 @@ void DrawCircleMarkers()
           text(radius,ratioX*sl.getCentroidX(),ratioY*sl.getCentroidY());
           j++; 
       }  
-      if (foundComp.size()==3)
+      if (foundObjects.size()==3)
       {
         SegmentList leftEye,rightEye;
-        if (foundComp.get(0).getCentroidX()<foundComp.get(1).getCentroidX())
+        if (foundObjects.get(0).getCentroidX()<foundObjects.get(1).getCentroidX())
         {
-          rightEye=foundComp.get(0);
-          leftEye=foundComp.get(1);
+          rightEye=foundObjects.get(0);
+          leftEye=foundObjects.get(1);
         }
         else
         {
-          rightEye=foundComp.get(1);
-          leftEye=foundComp.get(0);
+          rightEye=foundObjects.get(1);
+          leftEye=foundObjects.get(0);
         }
-        SegmentList axisPoint=foundComp.get(2);
+        SegmentList axisPoint=foundObjects.get(2);
         int betweenEyesX=(int)(ratioX*(leftEye.getCentroidX()+rightEye.getCentroidX())/2);
         int betweenEyesY=(int)(ratioY*(leftEye.getCentroidY()+rightEye.getCentroidY())/2);
         stroke(color(255,0,0,255));
@@ -259,8 +259,8 @@ void DrawSquareMarkers()
     //textFont(f,18);
     int j=0;
     int i=0;
-    FillPallette(comp.size());
-    for(SegmentList sl:comp)
+    FillPallette(connectedComponents.size());
+    for(SegmentList sl:connectedComponents)
     {
       stroke(pallette[i++]);
       for (Segment s:sl)
@@ -268,10 +268,10 @@ void DrawSquareMarkers()
         line(s.x0,s.y,s.x1,s.y);
       }
     }
-    if(foundComp!=null)
+    if(foundObjects!=null)
     {
-      FillPallette(foundComp.size());
-      for (SegmentList sl:comp)
+      FillPallette(foundObjects.size());
+      for (SegmentList sl:connectedComponents)
       {
           int side=(int)SquareSideFromPerimeter(sl.getPerimeter());
           fill(color(255,0,0,100));

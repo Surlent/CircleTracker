@@ -7,6 +7,9 @@ class SegmentList extends ArrayList<Segment> {
   float perimeter=0;
   float area=0;
   
+  public int getRadius(){
+     return CircleRadiusFromPerimeter((int)(this.perimeter));
+  }
   public float getCircularity()
   {
     float p=getPerimeter();
@@ -49,7 +52,6 @@ class SegmentList extends ArrayList<Segment> {
   {
     return (int)this.area;
   }
-  
   
   // Tests whether the segment list contains segments in non-decreasing
   // order of y
