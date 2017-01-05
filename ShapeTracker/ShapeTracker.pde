@@ -1,6 +1,5 @@
 import processing.video.*;
 
-int time;
 void setup() {    
   if (usecam) {
     StartCamera();
@@ -52,8 +51,15 @@ void draw() {
       if (detectionButton.isPressed()&&trackingButton.isPressed())
       {
         //FindSquares();
-        FindCircles();
+        FindCircles();                   
+        tracker.setTracking(true);
+        tracker.setTrackedObject(foundObjects);
+        tracker.setCircleTrackingBounds();        
+        tracker.update();
         // (
+      }
+      else{
+        tracker.setTracking(false);
       }
       if (detectionButton.isPressed()||trackingButton.isPressed())
       {

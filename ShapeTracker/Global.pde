@@ -25,21 +25,21 @@ Button detectionButton; // Activates detection of connected components
 Button trackingButton; // Activates tracking of circles
 float wheelCount; // Tracks motion in mouse wheel
 
-
 // Connected components in the current image
-Components connectedComponents = new Components ();
+Components connectedComponents;
+
 // Filtered components
-Components foundObjects=new Components();
+Trackable foundObjects;
+
+// Keeps track of information about found objects
+Tracker tracker = new Tracker();
+
 // Image to be processed
 PImage img; 
 
 // Screen ratios for drawing
 float ratioX=1;
 float ratioY=1;
-;
-
-// Determines whether components are being tracked
-boolean tracking=false;
 
 // Sets minimum distances for components to be considered overlappingg
 int overlapDistanceX=0; // Should be set to 0 if no space between pixels is allowed
@@ -78,13 +78,13 @@ boolean HasRightColor (color c) {
 
 
 // Rectangles to be tracked on the screen
-ArrayList<Rectangle> trackingBounds;
+
 
 void CreateComponents()
 {    
-  if (tracking)
+  if (tracker.isTracking())
   {
-    connectedComponents = new Components (img, trackingBounds);
+    connectedComponents=new Components(img, tracker.getTrackingBounds());
   } else
   {
     connectedComponents=new Components(img);
@@ -140,22 +140,6 @@ void FillPallette (int n) {
   }
 }
 
-void DrawDebugInfo()
-{    
-  println ("Total Found Size:"+((foundObjects!=null)?(foundObjects.size()):(0)));
-  println ("Total Size:"+((connectedComponents!=null)?(connectedComponents.size()):(0)));
-  int i=0;
-  if (trackingButton.isPressed()) {
-    for (SegmentList sl : foundObjects) {
-      float x=sl.getCentroidX();
-      float y=sl.getCentroidY();
-      println("i="+i+",x="+x+",y="+y);
-      point(x, y);
-      i++;
-    }
-  }
-}
-
 void DrawControls() {
   surface.setSize((int)(img.width*1.5), img.height);
   hueSlider = new HScrollBar((img.width*1.1), (img.height*0.2), (img.width*0.3), (img.height*0.03), 1, 0, 0, 0, 100, 4, 0.3); // Initializes slider
@@ -203,9 +187,8 @@ void UpdateButtons() {
       if (!detectionButton.isPressed())
       {
         trackingButton.pressed=false;          
-        foundObjects=null;
-        trackingBounds=null;
-        tracking=false;
+        foundObjects=null;        
+        tracker.setTracking(false);
       }
     }
     detectionButton.display();
@@ -220,12 +203,10 @@ void UpdateButtons() {
       {
         trackingButton.setText((trackingButton.isPressed())?("Untrack"):("Track"));
         println("Tracking "+((trackingButton.isPressed()==true)?("started"):("stopped")));
-        if (!trackingButton.isPressed())
-        {
-          foundObjects=null;
-          trackingBounds=null;
-          tracking=false;
-        }
+        if (!trackingButton.isPressed()) {
+          foundObjects=null;          
+          tracker.setTracking(false);
+        } 
       }
     }
     trackingButton.display();
@@ -285,15 +266,35 @@ void StartCamera() {
   }
 }
 
-int LargestRadiusObjectIndex(Components comp){
-    int chosenIndex=-1;
-    float highestValue=-1;
-    for(int i=0;i<comp.size();i++){
-        SegmentList obj=comp.get(i);
-        if (obj.getArea()>highestValue){
-          highestValue=CircleRadiusFromPerimeter(obj.getPerimeter());
-          chosenIndex=i;
-        }
+int LargestRadiusObjectIndex(Components comp) {
+  int chosenIndex=-1;
+  float highestValue=-1;
+  for (int i=0; i<comp.size(); i++) {
+    SegmentList obj=comp.get(i);
+    if (obj.getArea()>highestValue) {
+      highestValue=obj.getPerimeter(); // Since radius is directly proportional to perimeter //CircleRadiusFromPerimeter(obj.getPerimeter());
+      chosenIndex=i;
     }
-    return chosenIndex;
+  }
+  return chosenIndex;
+}
+
+void DrawDebugInfo()
+{      
+  println ("Components Size:"+((connectedComponents!=null)?(connectedComponents.size()):(0)));
+  println ("Objects Size:"+((foundObjects!=null)?(foundObjects.size()):(0)));
+  int i=0;
+  if (trackingButton.isPressed()) {
+    for (SegmentList sl : foundObjects) {
+      float x=sl.getCentroidX();
+      float y=sl.getCentroidY();
+      println("i="+i+",x="+x+",y="+y);
+      point(x, y);      
+      i++;
+    }
+    PVector trackerPosition=tracker.getPosition();
+    println("Position:"+trackerPosition);
+    ellipse(trackerPosition.x,trackerPosition.y,10,10);
+    println("Direction:"+tracker.dx);
+  }
 }

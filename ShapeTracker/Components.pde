@@ -16,15 +16,15 @@ class Components extends ArrayList<SegmentList> {
         println("Max number of components("+maxNumberComponents+") exceeded.");
         break;
       }
-    }
+    }    
   }
   
   Components (PImage img) {
     super();
     for (int y = 0; y < img.height; y++) {
       SegmentList l = SegmentRow(img,y);
-      this.merge(l);
-    }
+      merge(l);
+    }    
   }
   Components(PImage img,Rectangle r)
   {
@@ -32,8 +32,8 @@ class Components extends ArrayList<SegmentList> {
     for (int y = (int)r.getY(); y < (int)(r.getY()+r.getHeight()); y++) 
     {
       SegmentList l = SegmentRow(img,y,r);
-      this.merge(l);
-    }
+      merge(l);
+    }    
   }
   Components(PImage img,ArrayList<Rectangle> bounds)
   {
@@ -43,10 +43,11 @@ class Components extends ArrayList<SegmentList> {
       for (int y = (int)r.getY(); y < (int)(r.getY()+r.getHeight()); y++) 
       {
         SegmentList l = SegmentRow(img,y,r);
-        this.merge(l);
+        merge(l);
       }
-    }
+    }    
   }
+  
   // Merges this collection of connected components with
   // a list of segments obtained by scanning another line
   void merge (SegmentList other) { 

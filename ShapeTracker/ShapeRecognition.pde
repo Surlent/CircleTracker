@@ -10,7 +10,7 @@ void FindCircles()
     int perimeter;
     int area;
     float circularity;
-    foundObjects=new Components();
+    foundObjects=new Trackable();
     
     for (SegmentList sl : connectedComponents) {
       circularity=sl.getCircularity();
@@ -25,13 +25,13 @@ void FindCircles()
       
       if ((perimeter<=maxPerimeter)&&(perimeter>=minPerimeter)&&(area<=maxArea)&&(area>=minArea)&&(circularity<=maxCircularity)&&(circularity>=minCircularity))
       {
-        foundObjects.add(sl);
-      }
-    }
-    if(foundObjects.size()!=3)
-    {
-      tracking=false;
-    }
+        foundObjects.add(sl);        
+      }      
+    }    
+    //if(foundObjects.size()!=3)
+    //{
+    //  tracker.setTracking(false);
+    //}
 }
 
 void FindSquares()
@@ -44,7 +44,7 @@ void FindSquares()
     int perimeter;
     int area;
     float circularity,minCircularity,maxCircularity;
-    foundObjects=new Components();
+    foundObjects=new Trackable();
     
     for (SegmentList sl : connectedComponents) {
       circularity=sl.getCircularity();
@@ -63,7 +63,7 @@ void FindSquares()
     }
     if(foundObjects.size()!=3)
     {
-      tracking=false;
+      tracker.setTracking(false);
     }
 }
 
@@ -175,29 +175,12 @@ float SquareSideFromPerimeter(int perimeter)
   return perimeter/4;
 }
 
-void SetCircleTrackingBounds()
-{
-  if (tracking)
-  {
-    int left=0,top=connectedComponents.get(0).get(0).y,w=img.width,h=0;
-    trackingBounds=new ConnectedRectangles();
-    for (SegmentList sl:foundObjects)
-    {
-     int radius=(int)CircleRadiusFromPerimeter(sl.getPerimeter());
-     int estimatedRadius=(int)(radius*1.3);     
-     h=min(img.height,max(h,sl.getCentroidY()+estimatedRadius-top));
-    } 
-    Rectangle trackingRectangle=new Rectangle(left,top,w,h);
-    trackingBounds.add(trackingRectangle);
-  }
-}
-
 void DrawCircleMarkers()
 {
     PFont f=createFont("Arial",16,true);
-    //textFont(f,36);
-    int j=0;
+    textFont(f,16);    
     int i=0;
+    int j=0;
     FillPallette(connectedComponents.size());
     for(SegmentList sl:connectedComponents)
     {
@@ -218,34 +201,11 @@ void DrawCircleMarkers()
           text(radius,ratioX*sl.getCentroidX(),ratioY*sl.getCentroidY());
           j++; 
       }  
-      if (foundObjects.size()==3)
-      {
-        SegmentList leftEye,rightEye;
-        if (foundObjects.get(0).getCentroidX()<foundObjects.get(1).getCentroidX())
-        {
-          rightEye=foundObjects.get(0);
-          leftEye=foundObjects.get(1);
-        }
-        else
-        {
-          rightEye=foundObjects.get(1);
-          leftEye=foundObjects.get(0);
-        }
-        SegmentList axisPoint=foundObjects.get(2);
-        int betweenEyesX=(int)(ratioX*(leftEye.getCentroidX()+rightEye.getCentroidX())/2);
-        int betweenEyesY=(int)(ratioY*(leftEye.getCentroidY()+rightEye.getCentroidY())/2);
-        stroke(color(255,0,0,255));
-        
-        line(ratioX*rightEye.getCentroidX(),ratioY*rightEye.getCentroidY(),ratioX*leftEye.getCentroidX(),ratioY*leftEye.getCentroidY());
-        line(ratioX*leftEye.getCentroidX(),ratioY*leftEye.getCentroidY(),ratioX*axisPoint.getCentroidX(),ratioY*axisPoint.getCentroidY());
-        line(ratioX*axisPoint.getCentroidX(),ratioY*axisPoint.getCentroidY(),ratioX*rightEye.getCentroidX(),ratioY*rightEye.getCentroidY());
-        line(ratioX*axisPoint.getCentroidX(),ratioY*axisPoint.getCentroidY(),ratioX*betweenEyesX,ratioY*betweenEyesY);    
-      }
     }
-    if(tracking)
-    {
-      //println("bounds size:"+trackingBounds.size());
+    if(tracker.isTracking())
+    {      
       fill(color(255,0,0,50));
+      ConnectedRectangles trackingBounds = tracker.getTrackingBounds();      
       for (Rectangle r:trackingBounds)
       {
         rect(ratioX*r.getX(),ratioY*r.getY(),ratioX*r.getWidth(),ratioY*r.getHeight());
@@ -281,10 +241,10 @@ void DrawSquareMarkers()
           j++; 
       }  
     }
-    if(tracking)
-    {
-      //println("bounds size:"+trackingBounds.size());
+    if(tracker.isTracking())
+    {      
       fill(color(255,0,0,50));
+      ConnectedRectangles trackingBounds=new ConnectedRectangles();
       for (Rectangle r:trackingBounds)
       {
         rect(ratioX*r.getX(),ratioY*r.getY(),ratioX*r.getWidth(),ratioY*r.getHeight());

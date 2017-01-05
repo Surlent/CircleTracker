@@ -8,7 +8,7 @@ class SegmentList extends ArrayList<Segment> {
   float area=0;
   
   public int getRadius(){
-     return CircleRadiusFromPerimeter((int)(this.perimeter));
+     return (int)CircleRadiusFromPerimeter((int)(this.perimeter));
   }
   public float getCircularity()
   {
@@ -23,7 +23,11 @@ class SegmentList extends ArrayList<Segment> {
   public int getCentroidY()
   {
     return (int)centroidY;
+  } 
+  public PVector getCentroid(){
+    return new PVector(centroidX,centroidY);
   }
+  
   public int getCentroidXBrute()
   {
     float sumX=0;
@@ -114,7 +118,7 @@ class SegmentList extends ArrayList<Segment> {
     //assert (yMonotonic());
     //assert (other.yMonotonic());
     int i = 0, j = 0;
-    while (i < size() && j < other.size()) {
+    while (i < n && j < m) {
       if (get(i).y < other.get(j).y) {
         ret.add(get(i++));
       }
