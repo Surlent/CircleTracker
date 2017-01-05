@@ -25,6 +25,7 @@ class Tracker {
     }
     else{
       this.trackingBounds=null;
+      this.trackedObject=null;
     }
   }
   void setTrackedObject(Trackable trackableObject) {

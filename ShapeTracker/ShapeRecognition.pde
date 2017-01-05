@@ -20,8 +20,8 @@ void FindCircles()
       radius=(int)CircleRadiusFromPerimeter(perimeter);
       minCircularity=AcceptableCircleCircularity(radius,0.9);
       maxCircularity=AcceptableCircleCircularity(radius,1.1);
-      minArea=AcceptableCircleArea(radius,0.9);      
-      maxArea=AcceptableCircleArea(radius,1.1);
+      minArea=AcceptableCircleArea(radius,0.8);      
+      maxArea=AcceptableCircleArea(radius,1.2);
       
       if ((perimeter<=maxPerimeter)&&(perimeter>=minPerimeter)&&(area<=maxArea)&&(area>=minArea)&&(circularity<=maxCircularity)&&(circularity>=minCircularity))
       {
@@ -178,7 +178,7 @@ float SquareSideFromPerimeter(int perimeter)
 void DrawCircleMarkers()
 {
     PFont f=createFont("Arial",16,true);
-    textFont(f,16);    
+    //textFont(f,16);    
     int i=0;
     int j=0;
     FillPallette(connectedComponents.size());

@@ -5,7 +5,7 @@ boolean usecam = false;
 Capture cam;  
 
 // Name of the image file if usecam is false
-String imagename = "shapes.jpg";
+String imagename = "circles2.png";
 
 // Camera size
 String cameraSize="640x480";
@@ -187,8 +187,7 @@ void UpdateButtons() {
       if (!detectionButton.isPressed())
       {
         trackingButton.pressed=false;          
-        foundObjects=null;        
-        tracker.setTracking(false);
+        connectedComponents=null;                
       }
     }
     detectionButton.display();
@@ -200,15 +199,15 @@ void UpdateButtons() {
       boolean trackingButtonPressed=trackingButton.isPressed();
       trackingButton.update();
       if (trackingButton.isPressed()!=trackingButtonPressed)
-      {
-        trackingButton.setText((trackingButton.isPressed())?("Untrack"):("Track"));
+      {        
         println("Tracking "+((trackingButton.isPressed()==true)?("started"):("stopped")));
         if (!trackingButton.isPressed()) {
           foundObjects=null;          
           tracker.setTracking(false);
         } 
       }
-    }
+    }  
+    trackingButton.setText((trackingButton.isPressed())?("Untrack"):("Track"));
     trackingButton.display();
   }
 }
@@ -279,6 +278,32 @@ int LargestRadiusObjectIndex(Components comp) {
   return chosenIndex;
 }
 
+void Arrow(PVector p1, PVector p2) {
+  float x1=p1.x;
+  float y1=p1.y;
+  float x2=p2.x;
+  float y2=p2.y;
+  line(x1, y1, x2, y2);
+  pushMatrix();
+  translate(x2, y2);
+  float a = atan2(x1-x2, y2-y1);
+  rotate(a);
+  line(0, 0, -10, -10);
+  line(0, 0, 10, -10);
+  popMatrix();
+} 
+
+void ReverseArrow(PVector p1,PVector p2){
+  Arrow(p2,p1);
+}
+
+float DecreasingFunction(float radius){
+  return 1/radius;
+}
+
+float IncreasingFunction(float radius){
+  return 0.1*log(radius);
+}
 void DrawDebugInfo()
 {      
   println ("Components Size:"+((connectedComponents!=null)?(connectedComponents.size()):(0)));
@@ -294,6 +319,15 @@ void DrawDebugInfo()
     }
     PVector trackerPosition=tracker.getPosition();
     println("Position:"+trackerPosition);
+    i=0;
+    for(PVector p:tracker.trackedObject.componentCentroids){
+      Arrow(trackerPosition,p);             
+      println("DirVector"+i+":"+PVector.sub(trackerPosition,p).mult(IncreasingFunction(tracker.trackedObject.componentRadii.get(i))));
+      println("Radius:"+tracker.trackedObject.componentRadii.get(i));
+      i++;
+    }
+    stroke(255,255,255);
+    Arrow(trackerPosition,PVector.add(trackerPosition,tracker.trackedObject.direction));
     ellipse(trackerPosition.x,trackerPosition.y,10,10);
     println("Direction:"+tracker.dx);
   }
