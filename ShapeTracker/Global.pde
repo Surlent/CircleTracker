@@ -1,11 +1,11 @@
 // Whether to use the webcam to obtain an image
-boolean usecam = false;
+boolean usecam = true;
 
 // The webcam we'll be using if usecam is True
 Capture cam;  
 
 // Name of the image file if usecam is false
-String imagename = "circles2.png";
+String imagename = "equidistantcircles2.png";
 
 // Camera size
 String cameraSize="640x480";
@@ -24,6 +24,11 @@ HScrollBar brightnessSlider;
 Button detectionButton; // Activates detection of connected components
 Button trackingButton; // Activates tracking of circles
 float wheelCount; // Tracks motion in mouse wheel
+
+// Starting values for color picker
+float baseHue=0;
+float baseSaturation=0;
+float baseBrightness=0;
 
 // Connected components in the current image
 Components connectedComponents;
@@ -84,11 +89,16 @@ void CreateComponents()
 {    
   if (tracker.isTracking())
   {
-    connectedComponents=new Components(img, tracker.getTrackingBounds());
+    if (foundObjects.size()>0){
+      connectedComponents=new Components(img, tracker.getTrackingBounds());
+    }
+    else{
+      connectedComponents=new Components(img);
+    }
   } else
   {
     connectedComponents=new Components(img);
-  }
+  }  
 }
 
 // Obtains a list of segments of pixel ranges in line y of the given
@@ -142,7 +152,7 @@ void FillPallette (int n) {
 
 void DrawControls() {
   surface.setSize((int)(img.width*1.5), img.height);
-  hueSlider = new HScrollBar((img.width*1.1), (img.height*0.2), (img.width*0.3), (img.height*0.03), 1, 0, 0, 0, 100, 4, 0.3); // Initializes slider
+  hueSlider = new HScrollBar((img.width*1.1), (img.height*0.2), (img.width*0.3), (img.height*0.03), 1, 0, baseHue, baseSaturation, baseBrightness, 4, 0.3); // Initializes slider
   saturationSlider = new HScrollBar((img.width*1.1), (img.height*0.4), (img.width*0.3), (img.height*0.03), 1, 1, hueSlider.getHue(), hueSlider.getSaturation(), hueSlider.getBrightness(), 4, 0.3); // Initializes slider
   brightnessSlider = new HScrollBar((img.width*1.1), (img.height*0.6), (img.width*0.3), (img.height*0.03), 1, 2, hueSlider.getHue(), hueSlider.getSaturation(), hueSlider.getBrightness(), 4, 0.3); // Initializes slider
   float buttonWidth=img.width*0.11;

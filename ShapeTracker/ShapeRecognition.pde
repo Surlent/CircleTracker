@@ -18,10 +18,10 @@ void FindCircles()
       
       perimeter=sl.getPerimeter();
       radius=(int)CircleRadiusFromPerimeter(perimeter);
-      minCircularity=AcceptableCircleCircularity(radius,0.9);
-      maxCircularity=AcceptableCircleCircularity(radius,1.1);
-      minArea=AcceptableCircleArea(radius,0.8);      
-      maxArea=AcceptableCircleArea(radius,1.2);
+      minCircularity=AcceptableCircleCircularity(radius,0.7);
+      maxCircularity=AcceptableCircleCircularity(radius,1.3);
+      minArea=AcceptableCircleArea(radius,0.7);      
+      maxArea=AcceptableCircleArea(radius,1.3);
       
       if ((perimeter<=maxPerimeter)&&(perimeter>=minPerimeter)&&(area<=maxArea)&&(area>=minArea)&&(circularity<=maxCircularity)&&(circularity>=minCircularity))
       {

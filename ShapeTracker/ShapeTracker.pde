@@ -54,8 +54,8 @@ void draw() {
         FindCircles();                   
         tracker.setTracking(true);
         tracker.setTrackedObject(foundObjects);
-        tracker.setCircleTrackingBounds();        
         tracker.update();
+        tracker.setCircleTrackingBounds();                
         // (
       }
       else{

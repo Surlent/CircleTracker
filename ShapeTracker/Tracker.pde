@@ -66,8 +66,10 @@ class Tracker {
   void setCircleTrackingBounds()
   {
     if (tracking)
-    {
-      int left=0, top=connectedComponents.get(0).get(0).y, w=img.width, h=0;
+    {      
+      int left=0;
+      int top=(trackedObject.size()>0)?(trackedObject.get(0).get(0).y):(0);
+      int w=img.width, h=0;
       for (SegmentList sl : trackedObject)
       {
         int radius=(int)CircleRadiusFromPerimeter(sl.getPerimeter());
