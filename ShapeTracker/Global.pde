@@ -7,6 +7,16 @@ Capture cam;
 // Name of the image file if usecam is false
 String imagename = "equidistantcircles2.png";
 
+// Starting values for color picker
+float baseHue=180;
+float baseSaturation=100;
+float baseBrightness=100;
+float colorConfidenceInterval=0.6;
+
+// Limits circles being tracked
+float minCircleRadius=10;
+float maxCircleRadius=1000;
+
 // Camera size
 String cameraSize="640x480";
 
@@ -25,10 +35,9 @@ Button detectionButton; // Activates detection of connected components
 Button trackingButton; // Activates tracking of circles
 float wheelCount; // Tracks motion in mouse wheel
 
-// Starting values for color picker
-float baseHue=0;
-float baseSaturation=0;
-float baseBrightness=0;
+// Limit squares being tracked
+float minSquarePerimeter=DiscreteSquarePerimeter(10);
+float maxSquarePerimeter=DiscreteSquarePerimeter(200);
 
 // Connected components in the current image
 Components connectedComponents;
@@ -50,24 +59,17 @@ float ratioY=1;
 int overlapDistanceX=0; // Should be set to 0 if no space between pixels is allowed
 int overlapDistanceY=1; // Should be set to 1 if no space between pixels is allowed
 
-// Limits circles being tracked
-float minCirclePerimeter=DiscreteCirclePerimeter(5);
-float maxCirclePerimeter=DiscreteCirclePerimeter(100);
-
-// Limit squares being tracked
-float minSquarePerimeter=DiscreteSquarePerimeter(10);
-float maxSquarePerimeter=DiscreteSquarePerimeter(200);
 // Color array for drawing the components
 color pallette [] = { color (random(255), random(255), random(255)) };
 
 // This is the function that tells whether a pixel is of 
 // the desired color
-float rightHueLower=180;
-float rightHueUpper=220;
-float rightSaturationLower=0.5;
-float rightSaturationUpper=1;
-float rightBrightnessLower=0.3;
-float rightBrightnessUpper=1;
+float rightHueLower;//=180;
+float rightHueUpper;//=220;
+float rightSaturationLower;//=0.5;
+float rightSaturationUpper;//=1;
+float rightBrightnessLower;//=0.3;
+float rightBrightnessUpper;//=1;
 
 boolean HasRightColor (color c) {
   colorMode(HSB, 360, 100, 100);
@@ -89,7 +91,7 @@ void CreateComponents()
 {    
   if (tracker.isTracking())
   {
-    if (foundObjects.size()>0){
+    if (foundObjects.size()>=3){
       connectedComponents=new Components(img, tracker.getTrackingBounds());
     }
     else{
@@ -152,9 +154,9 @@ void FillPallette (int n) {
 
 void DrawControls() {
   surface.setSize((int)(img.width*1.5), img.height);
-  hueSlider = new HScrollBar((img.width*1.1), (img.height*0.2), (img.width*0.3), (img.height*0.03), 1, 0, baseHue, baseSaturation, baseBrightness, 4, 0.3); // Initializes slider
-  saturationSlider = new HScrollBar((img.width*1.1), (img.height*0.4), (img.width*0.3), (img.height*0.03), 1, 1, hueSlider.getHue(), hueSlider.getSaturation(), hueSlider.getBrightness(), 4, 0.3); // Initializes slider
-  brightnessSlider = new HScrollBar((img.width*1.1), (img.height*0.6), (img.width*0.3), (img.height*0.03), 1, 2, hueSlider.getHue(), hueSlider.getSaturation(), hueSlider.getBrightness(), 4, 0.3); // Initializes slider
+  hueSlider = new HScrollBar((img.width*1.1), (img.height*0.2), (img.width*0.3), (img.height*0.03), 1, 0, baseHue, baseSaturation, baseBrightness, 4, colorConfidenceInterval); // Initializes slider
+  saturationSlider = new HScrollBar((img.width*1.1), (img.height*0.4), (img.width*0.3), (img.height*0.03), 1, 1, hueSlider.getHue(), hueSlider.getSaturation(), hueSlider.getBrightness(), 4, colorConfidenceInterval); // Initializes slider
+  brightnessSlider = new HScrollBar((img.width*1.1), (img.height*0.6), (img.width*0.3), (img.height*0.03), 1, 2, hueSlider.getHue(), hueSlider.getSaturation(), hueSlider.getBrightness(), 4, colorConfidenceInterval); // Initializes slider
   float buttonWidth=img.width*0.11;
   detectionButton = new Button((img.width*1.1)+((img.width*0.3)/2-buttonWidth)/2, (img.height*0.8), buttonWidth, (img.height*0.05), "Detect", color(255, 255, 255), color(130, 130, 130), color(0, 0, 0));
   trackingButton = new Button((img.width*1.1)+(img.width*0.3)/2+((img.width*0.3)/2-(buttonWidth))/2, (img.height*0.8), buttonWidth, (img.height*0.05), "Track", color(255, 255, 255), color(130, 130, 130), color(0, 0, 0));
