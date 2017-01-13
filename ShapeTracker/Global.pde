@@ -11,7 +11,7 @@ String imagename = "equidistantcircles2.png";
 float baseHue=180;
 float baseSaturation=100;
 float baseBrightness=100;
-float colorConfidenceInterval=0.6;
+float colorConfidenceInterval=0.3;
 
 // Limits circles being tracked
 float minCircleRadius=10;
@@ -19,6 +19,9 @@ float maxCircleRadius=1000;
 
 // Camera size
 String cameraSize="640x480";
+
+// Area of camera frame
+int cameraArea;
 
 // Frames per second, if available for current camera size
 int fps;
@@ -152,78 +155,6 @@ void FillPallette (int n) {
   }
 }
 
-void DrawControls() {
-  surface.setSize((int)(img.width*1.5), img.height);
-  hueSlider = new HScrollBar((img.width*1.1), (img.height*0.2), (img.width*0.3), (img.height*0.03), 1, 0, baseHue, baseSaturation, baseBrightness, 4, colorConfidenceInterval); // Initializes slider
-  saturationSlider = new HScrollBar((img.width*1.1), (img.height*0.4), (img.width*0.3), (img.height*0.03), 1, 1, hueSlider.getHue(), hueSlider.getSaturation(), hueSlider.getBrightness(), 4, colorConfidenceInterval); // Initializes slider
-  brightnessSlider = new HScrollBar((img.width*1.1), (img.height*0.6), (img.width*0.3), (img.height*0.03), 1, 2, hueSlider.getHue(), hueSlider.getSaturation(), hueSlider.getBrightness(), 4, colorConfidenceInterval); // Initializes slider
-  float buttonWidth=img.width*0.11;
-  detectionButton = new Button((img.width*1.1)+((img.width*0.3)/2-buttonWidth)/2, (img.height*0.8), buttonWidth, (img.height*0.05), "Detect", color(255, 255, 255), color(130, 130, 130), color(0, 0, 0));
-  trackingButton = new Button((img.width*1.1)+(img.width*0.3)/2+((img.width*0.3)/2-(buttonWidth))/2, (img.height*0.8), buttonWidth, (img.height*0.05), "Track", color(255, 255, 255), color(130, 130, 130), color(0, 0, 0));
-}
-
-void UpdateSliders() {
-  if (hueSlider!=null)
-  { 
-    hueSlider.setSaturation(saturationSlider.getSaturation());
-    hueSlider.setBrightness(brightnessSlider.getBrightness());
-    hueSlider.update();
-    hueSlider.display();
-    saturationSlider.setHue(hueSlider.getHue());
-    saturationSlider.setBrightness(brightnessSlider.getBrightness());
-    saturationSlider.update();
-    saturationSlider.display();
-    brightnessSlider.setSaturation(saturationSlider.getSaturation());
-    brightnessSlider.setHue(hueSlider.getHue());
-    brightnessSlider.update();
-    brightnessSlider.display();
-    rightHueLower=hueSlider.getLowerValue();
-    rightSaturationLower=saturationSlider.getLowerValue();
-    rightBrightnessLower=brightnessSlider.getLowerValue();
-    rightHueUpper=hueSlider.getUpperValue();
-    rightSaturationUpper=saturationSlider.getUpperValue();
-    rightBrightnessUpper=brightnessSlider.getUpperValue();
-    //println("lowerHue:"+rightHueLower+",upperHue:"+rightHueUpper+",lowerSaturation:"+rightSaturationLower+",upperSaturation:"+rightSaturationUpper+",lowerBrightness:"+rightBrightnessLower+",upperBrightness:"+rightBrightnessUpper);
-  }
-}
-
-void UpdateButtons() {
-  if (detectionButton!=null)
-  {
-    boolean detectionButtonPressed=detectionButton.isPressed();
-    detectionButton.update();
-    if (detectionButton.isPressed()!=detectionButtonPressed)
-    {
-      detectionButton.setText((detectionButton.isPressed())?("Undetect"):("Detect"));
-      println("Detection "+((detectionButton.isPressed()==true)?("started"):("stopped")));
-      if (!detectionButton.isPressed())
-      {
-        trackingButton.pressed=false;          
-        connectedComponents=null;                
-      }
-    }
-    detectionButton.display();
-  }
-  if (trackingButton!=null)
-  {
-    if (detectionButton.isPressed())
-    {
-      boolean trackingButtonPressed=trackingButton.isPressed();
-      trackingButton.update();
-      if (trackingButton.isPressed()!=trackingButtonPressed)
-      {        
-        println("Tracking "+((trackingButton.isPressed()==true)?("started"):("stopped")));
-        if (!trackingButton.isPressed()) {
-          foundObjects=null;          
-          tracker.setTracking(false);
-        } 
-      }
-    }  
-    trackingButton.setText((trackingButton.isPressed())?("Untrack"):("Track"));
-    trackingButton.display();
-  }
-}
-
 // Chooses a camera
 String ChooseCamera(String[] cameras) {
   String chosenCamera="";
@@ -249,6 +180,11 @@ String ChooseCamera(String[] cameras) {
   if (chosenCamera=="") {        
     chosenCamera=cameras[0]+",size="+cameraSize+",fps="+desiredFPS;
   }
+  String[] sizeInfo=cameraSize.split("x");
+  int cameraWidth=Integer.parseInt(sizeInfo[0]);
+  int cameraHeight=Integer.parseInt(sizeInfo[1]);
+  cameraArea=cameraWidth*cameraHeight;
+  println(cameraArea);
   return chosenCamera;
 }
 
@@ -268,28 +204,15 @@ void StartCamera() {
     println(chosenCamera);
     fps=Integer.parseInt(chosenCamera.substring(fpsIndex));
 
-
     // The camera can be initialized directly using an 
     // element from the array returned by list():
     cam = new Capture(this, chosenCamera);
-    cam.start();
+    cam.start();    
     println("Camera loading...");
   }
 }
 
-int LargestRadiusObjectIndex(Components comp) {
-  int chosenIndex=-1;
-  float highestValue=-1;
-  for (int i=0; i<comp.size(); i++) {
-    SegmentList obj=comp.get(i);
-    if (obj.getArea()>highestValue) {
-      highestValue=obj.getPerimeter(); // Since radius is directly proportional to perimeter //CircleRadiusFromPerimeter(obj.getPerimeter());
-      chosenIndex=i;
-    }
-  }
-  return chosenIndex;
-}
-
+// Draw an arrow from p1 to p2
 void Arrow(PVector p1, PVector p2) {
   float x1=p1.x;
   float y1=p1.y;
@@ -305,6 +228,7 @@ void Arrow(PVector p1, PVector p2) {
   popMatrix();
 } 
 
+// Draw an arrow from p2 to p1
 void ReverseArrow(PVector p1,PVector p2){
   Arrow(p2,p1);
 }
@@ -316,6 +240,7 @@ float DecreasingFunction(float radius){
 float IncreasingFunction(float radius){
   return 0.1*log(radius);
 }
+
 void DrawDebugInfo()
 {      
   println ("Components Size:"+((connectedComponents!=null)?(connectedComponents.size()):(0)));
@@ -329,18 +254,18 @@ void DrawDebugInfo()
       point(x, y);      
       i++;
     }
-    PVector trackerPosition=tracker.getPosition();
-    println("Position:"+trackerPosition);
+    PVector trackerPosition=tracker.getPosition();       
     i=0;
     for(PVector p:tracker.trackedObject.componentCentroids){
       Arrow(trackerPosition,p);             
-      println("DirVector"+i+":"+PVector.sub(trackerPosition,p).mult(IncreasingFunction(tracker.trackedObject.componentRadii.get(i))));
-      println("Radius:"+tracker.trackedObject.componentRadii.get(i));
+      //println("DirVector"+i+":"+PVector.sub(trackerPosition,p).mult(IncreasingFunction(tracker.trackedObject.componentAreas.get(i))));
+      //println("Area:"+tracker.trackedObject.componentAreas.get(i));
       i++;
     }
     stroke(255,255,255);
-    Arrow(trackerPosition,PVector.add(trackerPosition,tracker.trackedObject.direction));
+    Arrow(trackerPosition,PVector.add(trackerPosition,tracker.trackedObject.direction.mult(100)));
     ellipse(trackerPosition.x,trackerPosition.y,10,10);
+    println("Position:"+tracker.x);
     println("Direction:"+tracker.dx);
   }
 }

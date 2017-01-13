@@ -2,7 +2,7 @@
 class Trackable extends Components{
   boolean tracked=false;
   public ArrayList<PVector> componentCentroids=new ArrayList<PVector>(); // Stores component centroids 
-  ArrayList<Integer> componentRadii=new ArrayList<Integer>();; // Stores radius of each component
+  ArrayList<Integer> componentAreas=new ArrayList<Integer>(); // Stores radius of each component
   PVector centroid=new PVector(0,0,0);
   PVector direction=new PVector(0,0,0); 
   
@@ -10,27 +10,40 @@ class Trackable extends Components{
   @Override
   boolean add(SegmentList other){    
     boolean success=super.add(other);
-    componentCentroids.add(other.getCentroid());
-    //println(centroid.mult(componentCentroids.size()-1).add(other.getCentroid()));    
-    this.centroid.mult(componentCentroids.size()-1);    
-    this.centroid.add(other.getCentroid());    
-    this.centroid.div(componentCentroids.size()); // updates centroid value       
-    componentRadii.add(other.getRadius());    
-    updateDirection();
+    
+    // updates position vector
+    updatePosition(other);
+    
+    // updates centroid value       
+    componentAreas.add(other.getArea());   
+    
+    // Three points define a plane, which indicates a direction
+    if(componentCentroids.size()==3){
+      updateDirection();
+    }
     return success;
   }
   
-  // Update direction vector based on new element
-  void updateDirection(){
-    direction=new PVector(0,0,0);
-    for(int i=0;i<componentCentroids.size();i++){
-      PVector componentCentroid=componentCentroids.get(i);
-      Integer radius=componentRadii.get(i);
-      direction.add(PVector.mult(PVector.sub(centroid,componentCentroid),IncreasingFunction(radius)));
-    }
-    direction.z=sqrt(1-(pow(direction.x,2)+pow(direction.y,2)));    
-    direction.mult(10);
+  void updatePosition(SegmentList newComponent){
+    PVector otherCentroid=newComponent.getCentroid();
+    
+    // z goes from outside to inside screen, which means a negative value outside
+    otherCentroid.z=1-cameraArea/newComponent.getArea();
+    componentCentroids.add(otherCentroid);           
+    this.centroid.mult(componentCentroids.size()-1);    
+    this.centroid.add(otherCentroid);    
+    this.centroid.div(componentCentroids.size()); 
   }
+  
+  // Update direction vector based on new element
+  void updateDirection(){    
+    direction=PVector.sub(componentCentroids.get(1),componentCentroids.get(0)).cross(PVector.sub(componentCentroids.get(2),componentCentroids.get(0)));    
+    if(direction.z<0){
+      direction.mult(-1);
+    }
+    direction.normalize();
+  }
+  
   PVector getCentroid(){
     return this.centroid;
   }
