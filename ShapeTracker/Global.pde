@@ -1,6 +1,8 @@
 // Whether to use the webcam to obtain an image
 boolean usecam = true;
 
+P3DWindow win;
+
 // The webcam we'll be using if usecam is True
 Capture cam;  
 

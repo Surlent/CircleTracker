@@ -13,6 +13,8 @@ void setup() {
       exit();
     }
   }
+  
+  //win=new P3DWindow();
 }
 
 // Triggers control bar resize on mouse wheel motion
