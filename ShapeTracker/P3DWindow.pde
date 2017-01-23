@@ -9,13 +9,15 @@
  */
 
 import remixlab.proscene.*;
-//import remixlab.dandelion.geom.*;
+import remixlab.dandelion.geom.*;
 
 class P3DWindow extends PApplet {
 
   Scene scene;
   InteractiveFrame iFrame;
   boolean firstPerson=false;
+  Vec eyePosition=new Vec();
+  Quat eyeOrientation=new Quat();
   
   P3DWindow(){
     super();
@@ -30,12 +32,13 @@ class P3DWindow extends PApplet {
     scene = new Scene(this);  
     iFrame = new InteractiveFrame(scene);
     iFrame.translate(30, 30);
+    //toggleFirstPerson();
   }
 
   void draw() {
     background(0);
     fill(204, 102, 0, 150);
-    scene.drawTorusSolenoid();
+    scene.drawTorusSolenoid(20);
 
     // Save the current model view matrix
     pushMatrix();
@@ -52,7 +55,7 @@ class P3DWindow extends PApplet {
       scene.drawTorusSolenoid();
     } else if (iFrame.grabsInput()) {
       fill(255, 0, 0);
-      scene.drawTorusSolenoid();
+      scene.drawTorusSolenoid(20);
     } else {
       fill(0, 0, 255, 150);
       scene.drawTorusSolenoid();
@@ -83,6 +86,20 @@ class P3DWindow extends PApplet {
     if (key == '+')
       scene.eyeFrame().setFlySpeed(scene.eyeFrame().flySpeed() * 1.1);
     if (key == '-')
-      scene.eyeFrame().setFlySpeed(scene.eyeFrame().flySpeed() / 1.1);
+      scene.eyeFrame().setFlySpeed(scene.eyeFrame().flySpeed() / 1.1);    
+  }
+  
+  public void setEyePosition(PVector vec){
+    this.eyePosition.setX(vec.x);
+    this.eyePosition.setY(vec.y);
+    this.eyePosition.setZ(vec.z);   
+    updatePosition();
+  }
+  
+  public void updatePosition(){
+    scene.eyeFrame().setPosition(eyePosition);
+  }
+  
+  public void updateDirection(){
   }
 }

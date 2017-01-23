@@ -1,13 +1,14 @@
 // Represents an object suitable for tracking by an external class
 class Trackable extends Components{
   boolean tracked=false;
+  
+  PVector centroid=new PVector(0,0,0);
+  PVector direction=new PVector(0,0,0);
+  
   public ArrayList<PVector> componentCentroids=new ArrayList<PVector>(); // Stores component centroids 
   ArrayList<Integer> componentAreas=new ArrayList<Integer>(); // Stores radius of each component
-  PVector centroid=new PVector(0,0,0);
-  PVector direction=new PVector(0,0,0); 
   
-  // Sames as superclass version, but with extra information stored  
-  @Override
+  // Sa version, but with extra information st
   boolean add(SegmentList other){    
     boolean success=super.add(other);
     
@@ -50,5 +51,5 @@ class Trackable extends Components{
   
   PVector getDirection(){
     return this.direction;
-  }   
+  }      
 };

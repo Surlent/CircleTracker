@@ -13,6 +13,7 @@ void FindCircles()
     foundObjects=new Trackable();
     
     for (SegmentList sl : connectedComponents) {
+      
       circularity=sl.getCircularity();
       area=sl.getArea();
       
@@ -27,8 +28,11 @@ void FindCircles()
       //&&(circularity<=maxCircularity)&&(circularity>=minCircularity)
       )
       {
-        foundObjects.add(sl);        
-      }      
+        foundObjects.add(sl);
+        if (foundObjects.size()==3){
+          break;
+        }
+      }        
     }    
     //if(foundObjects.size()!=3)
     //{

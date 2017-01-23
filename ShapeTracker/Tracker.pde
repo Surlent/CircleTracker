@@ -1,8 +1,12 @@
 class Tracker {
-  boolean tracking=false;  
+  boolean tracking=false; // Whether tracking is turned on  
+  boolean hasCoordinates=false; // Whether there are enough objects to establish a plane
 
-  PVector x; // Stores position of composite object (initial and current)
-  PVector dx; // Stores direction of composite object (initial and current)
+  PVector position=new PVector(0, 0, 0); // Stores position of composite object (initial and current)
+  PVector direction=new PVector(0, 0, 0); // Stores direction of composite object (initial and current)
+
+  // Moving averages parameter for direction
+  float alphaEWMA=0.9;
 
   // Rectangular areas to be scanned for tracking
   ConnectedRectangles trackingBounds;
@@ -20,16 +24,20 @@ class Tracker {
   }
   void setTracking(boolean isTracking) {
     this.tracking=isTracking;
-    if(isTracking){
+    if (isTracking) {
       this.trackingBounds=new ConnectedRectangles();
-    }
-    else{
+    } else {
       this.trackingBounds=null;
       this.trackedObject=null;
     }
   }
   void setTrackedObject(Trackable trackableObject) {
     trackedObject=trackableObject;
+    if (trackedObject.size()==3) {
+      this.hasCoordinates=true;
+    } else {
+      this.hasCoordinates=false;
+    }
   }
 
   void toggleTracking() {
@@ -40,27 +48,34 @@ class Tracker {
   void update() {
     if (tracking) {
       //SegmentList closestObject=foundObjects.get(LargestRadiusObjectIndex(foundObjects));
-      //int largestRadius=closestObject.getRadius();      
-      updatePosition();
-      updateDirection();      
+      //int largestRadius=closestObject.getRadius();    
+      if (trackedObject.size()==3) {
+        updatePosition();
+        updateDirection();
+      }
     } else {
     }
   }
 
-  private void updatePosition() {
-    x=trackedObject.getCentroid();    
+  // Updates position based on EWMA technique
+  private void updatePosition() {    
+    this.position=trackedObject.centroid;
+    //this.position=PVector.add(PVector.mult(trackedObject.centroid, alphaEWMA), PVector.mult(this.position, (1-alphaEWMA)));
   }
-
   private void updateDirection() {
-    dx=trackedObject.getDirection();    
+    this.direction=trackedObject.direction;
   }
 
   PVector getPosition() {
-    return x;
+    return this.position;
   }
 
   PVector getDirection() {
-    return dx;
+    return this.direction;
+  }
+
+  boolean HasCoordinates() {
+    return this.hasCoordinates;
   }
 
   void setCircleTrackingBounds()
@@ -77,7 +92,7 @@ class Tracker {
         h=min(img.height, max(h, sl.getCentroidY()+estimatedRadius-top));
       } 
       Rectangle trackingRectangle=new Rectangle(left, top, w, h);
-      this.trackingBounds.add(trackingRectangle);      
+      this.trackingBounds.add(trackingRectangle);
     }
   }
 };

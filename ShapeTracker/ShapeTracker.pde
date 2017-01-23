@@ -14,7 +14,7 @@ void setup() {
     }
   }
   
-  //win=new P3DWindow();
+  app=new P3DWindow();
 }
 
 // Triggers control bar resize on mouse wheel motion
@@ -36,8 +36,7 @@ void draw() {
         resized=true;
       }
     }
-  }
-
+  }  
   UpdateButtons();
   UpdateSliders();  
 
@@ -46,11 +45,11 @@ void draw() {
     if (img!=null)
     {
       image (img, 0, 0);
-      if (detectionButton.isPressed())
+      if (detecting)
       {
         CreateComponents();
       }
-      if (detectionButton.isPressed()&&trackingButton.isPressed())
+      if (detecting&&tracking)
       {
         //FindSquares();
         FindCircles();                   
@@ -76,4 +75,18 @@ void draw() {
   {
     frameCounter=1;
   }
+  if (tracker.tracking&&tracker.hasCoordinates){
+    PVector pos=tracker.position;
+    pos.normalize();
+    pos.mult(100);
+    pos.x=-pos.x;
+    pos.z=-pos.z;
+    pos.x=round(pos.x);
+    pos.y=round(pos.y);
+    pos.z=round(pos.z);
+    println("pos:"+pos);
+    app.setEyePosition(pos);
+    //app.setEyePosition(0,0,100);    
+  }
+  
 }
