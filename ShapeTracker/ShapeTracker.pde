@@ -75,17 +75,8 @@ void draw() {
   {
     frameCounter=1;
   }
-  if (tracker.tracking&&tracker.hasCoordinates){
-    PVector pos=tracker.position;
-    pos.normalize();
-    pos.mult(100);
-    pos.x=-pos.x;
-    pos.z=-pos.z;
-    pos.x=round(pos.x);
-    pos.y=round(pos.y);
-    pos.z=round(pos.z);
-    println("pos:"+pos);
-    app.setEyePosition(pos);
+  if (tracker.tracking&&tracker.hasCoordinates){   
+    app.setEyePosition(tracker.position);
     //app.setEyePosition(0,0,100);    
   }
   

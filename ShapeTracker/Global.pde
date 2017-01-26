@@ -14,7 +14,7 @@ String imagename = "equidistantcircles2.png";
 // Starting values for color picker
 float baseHue=180;
 float baseSaturation=100;
-float baseBrightness=100;
+float baseBrightness=60;
 float hueConfidenceInterval=0.3;
 float saturationConfidenceInterval=0.4;
 float brightnessConfidenceInterval=0.6;
@@ -45,7 +45,7 @@ Button trackingButton; // Activates tracking of circles
 float wheelCount; // Tracks motion in mouse wheel
 
 // Limit squares being tracked
-float minSquarePerimeter=DiscreteSquarePerimeter(10);
+float minSquarePerimeter=DiscreteSquarePerimeter(20);
 float maxSquarePerimeter=DiscreteSquarePerimeter(200);
 
 // Connected components in the current image

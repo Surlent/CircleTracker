@@ -6,7 +6,7 @@ class Tracker {
   PVector direction=new PVector(0, 0, 0); // Stores direction of composite object (initial and current)
 
   // Moving averages parameter for direction
-  float alphaEWMA=0.9;
+  float alphaEWMA=0.01;
 
   // Rectangular areas to be scanned for tracking
   ConnectedRectangles trackingBounds;
@@ -60,7 +60,7 @@ class Tracker {
   // Updates position based on EWMA technique
   private void updatePosition() {    
     this.position=trackedObject.centroid;
-    //this.position=PVector.add(PVector.mult(trackedObject.centroid, alphaEWMA), PVector.mult(this.position, (1-alphaEWMA)));
+    //this.position=EWMA(this.position,trackedObject.centroid,alphaEWMA);    
   }
   private void updateDirection() {
     this.direction=trackedObject.direction;

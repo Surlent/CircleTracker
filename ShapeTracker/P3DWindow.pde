@@ -89,10 +89,21 @@ class P3DWindow extends PApplet {
       scene.eyeFrame().setFlySpeed(scene.eyeFrame().flySpeed() / 1.1);    
   }
   
-  public void setEyePosition(PVector vec){
-    this.eyePosition.setX(vec.x);
-    this.eyePosition.setY(vec.y);
-    this.eyePosition.setZ(vec.z);   
+  public void setEyePosition(PVector pos){
+    pos.normalize();
+    pos.mult(100);
+    pos.x-=100;
+    pos.x=-pos.x;
+    pos.z=-pos.z;
+    pos.x=round(pos.x);
+    pos.y=round(pos.y);
+    pos.z=round(pos.z);
+    PVector previousPosition=new PVector(this.eyePosition.x(),this.eyePosition.y(),this.eyePosition.z());
+    pos=EWMA(previousPosition,pos,0.4);
+    this.eyePosition.setX(pos.x);
+    this.eyePosition.setY(pos.y);
+    this.eyePosition.setZ(pos.z);          
+    println("pos:"+pos);
     updatePosition();
   }
   

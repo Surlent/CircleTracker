@@ -162,6 +162,11 @@ float IncreasingFunction(float radius){
   return 0.1*log(radius);
 }
 
+// Exponentially weighted moving average
+PVector EWMA(PVector previous,PVector current,float alpha){
+  return PVector.add(PVector.mult(previous,1-alpha),PVector.mult(current,alpha));
+}
+
 void DrawDebugInfo()
 {      
   println ("Components Size:"+((connectedComponents!=null)?(connectedComponents.size()):(0)));
