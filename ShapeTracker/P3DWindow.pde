@@ -62,7 +62,21 @@ class P3DWindow extends PApplet {
     }  
 
     popMatrix();
-    
+    Vec dir=new Vec(0,0,0.05);
+    float ry=PVector.angleBetween(
+    Vec rot=new Vec(0.05,0,0);
+    if (keyPressed){
+      Quat prev=new Quat();      
+      if(key=='p'){        
+        prev.fromEulerAngles(rot);      
+        scene.eyeFrame().rotate(prev);
+      }
+      if(key=='o'){
+        rot.multiply(-1);
+        prev.fromEulerAngles(rot);      
+        scene.eyeFrame().rotate(prev);
+      }
+    }
   }
 
   public void toggleFirstPerson() {
@@ -86,9 +100,11 @@ class P3DWindow extends PApplet {
     if (key == '+')
       scene.eyeFrame().setFlySpeed(scene.eyeFrame().flySpeed() * 1.1);
     if (key == '-')
-      scene.eyeFrame().setFlySpeed(scene.eyeFrame().flySpeed() / 1.1);    
+      scene.eyeFrame().setFlySpeed(scene.eyeFrame().flySpeed() / 1.1); 
+    if (key == 'p'){
+      
+    }
   }
-  
   public void setEyePosition(PVector pos){
     pos.normalize();
     pos.mult(100);

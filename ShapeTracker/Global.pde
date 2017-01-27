@@ -1,5 +1,5 @@
 // Whether to use the webcam to obtain an image
-boolean usecam = true;
+boolean usecam = false;
 
 boolean detecting, tracking=false;
 
