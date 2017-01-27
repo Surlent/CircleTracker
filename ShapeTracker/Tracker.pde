@@ -82,17 +82,19 @@ class Tracker {
   {
     if (tracking)
     {      
-      int left=0;
-      int top=(trackedObject.size()>0)?(trackedObject.get(0).get(0).y):(0);
-      int w=img.width, h=0;
-      for (SegmentList sl : trackedObject)
-      {
-        int radius=(int)CircleRadiusFromPerimeter(sl.getPerimeter());
-        int estimatedRadius=(int)(radius*1.3);     
-        h=min(img.height, max(h, sl.getCentroidY()+estimatedRadius-top));
-      } 
-      Rectangle trackingRectangle=new Rectangle(left, top, w, h);
-      this.trackingBounds.add(trackingRectangle);
+      if(trackedObject.size()==3){
+        int left=0;
+        int top=(trackedObject.size()>0)?(trackedObject.get(0).get(0).y):(0);
+        int w=img.width, h=0;
+        for (SegmentList sl : trackedObject)
+        {
+          int radius=(int)CircleRadiusFromPerimeter(sl.getPerimeter());
+          int estimatedRadius=(int)(radius*1.3);     
+          h=min(img.height, max(h, sl.getCentroidY()+estimatedRadius-top));
+        } 
+        Rectangle trackingRectangle=new Rectangle(left, top, w, h);
+        this.trackingBounds.add(trackingRectangle);
+      }
     }
   }
 };

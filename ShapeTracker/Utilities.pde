@@ -172,26 +172,28 @@ void DrawDebugInfo()
   println ("Components Size:"+((connectedComponents!=null)?(connectedComponents.size()):(0)));
   println ("Objects Size:"+((foundObjects!=null)?(foundObjects.size()):(0)));
   int i=0;
-  if (trackingButton.isPressed()) {
-    for (SegmentList sl : foundObjects) {
-      float x=sl.getCentroidX();
-      float y=sl.getCentroidY();
-      println("i="+i+",x="+x+",y="+y);
-      point(x, y);      
-      i++;
+  if (tracking) {
+    if (foundObjects.size()==3){
+      for (SegmentList sl : foundObjects) {
+        float x=sl.getCentroidX();
+        float y=sl.getCentroidY();
+        println("i="+i+",x="+x+",y="+y);
+        point(x, y);      
+        i++;
+      }
+      PVector trackerPosition=tracker.getPosition();       
+      i=0;
+      for(PVector p:tracker.trackedObject.componentCentroids){
+        Arrow(trackerPosition,p);             
+        //println("DirVector"+i+":"+PVector.sub(trackerPosition,p).mult(IncreasingFunction(tracker.trackedObject.componentAreas.get(i))));
+        //println("Area:"+tracker.trackedObject.componentAreas.get(i));
+        i++;
+      }
+      stroke(255,255,255);
+      Arrow(trackerPosition,PVector.add(trackerPosition,tracker.trackedObject.direction.mult(100)));
+      ellipse(trackerPosition.x,trackerPosition.y,10,10);
+      println("Position:"+tracker.position);
+      println("Direction:"+tracker.direction);
     }
-    PVector trackerPosition=tracker.getPosition();       
-    i=0;
-    for(PVector p:tracker.trackedObject.componentCentroids){
-      Arrow(trackerPosition,p);             
-      //println("DirVector"+i+":"+PVector.sub(trackerPosition,p).mult(IncreasingFunction(tracker.trackedObject.componentAreas.get(i))));
-      //println("Area:"+tracker.trackedObject.componentAreas.get(i));
-      i++;
-    }
-    stroke(255,255,255);
-    Arrow(trackerPosition,PVector.add(trackerPosition,tracker.trackedObject.direction.mult(100)));
-    ellipse(trackerPosition.x,trackerPosition.y,10,10);
-    println("Position:"+tracker.position);
-    println("Direction:"+tracker.direction);
   }
 }
