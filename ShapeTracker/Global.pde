@@ -1,5 +1,5 @@
 // Whether to use the webcam to obtain an image
-boolean usecam = false;
+boolean usecam = true;
 
 boolean detecting, tracking=false;
 
@@ -17,7 +17,7 @@ float baseSaturation=100;
 float baseBrightness=60;
 float hueConfidenceInterval=0.3;
 float saturationConfidenceInterval=0.4;
-float brightnessConfidenceInterval=0.6;
+float brightnessConfidenceInterval=1;//0.6;
 
 // Limits circles being tracked
 float minCircleRadius=10;

@@ -16,8 +16,9 @@ class P3DWindow extends PApplet {
   Scene scene;
   InteractiveFrame iFrame;
   boolean firstPerson=false;
-  Vec eyePosition=new Vec();
-  Quat eyeOrientation=new Quat();
+  Vec eyePosition=new Vec(); // camera position
+  Vec eyeDirection=new Vec(); // where camera is looking at from position
+  Vec baseVector=new Vec(0,0,-1); // standard rotation direction
   
   P3DWindow(){
     super();
@@ -32,7 +33,7 @@ class P3DWindow extends PApplet {
     scene = new Scene(this);  
     iFrame = new InteractiveFrame(scene);
     iFrame.translate(30, 30);
-    //toggleFirstPerson();
+    toggleFirstPerson();
   }
 
   void draw() {
@@ -62,21 +63,26 @@ class P3DWindow extends PApplet {
     }  
 
     popMatrix();
-    Vec dir=new Vec(0,0,0.05);
-    float ry=PVector.angleBetween(
-    Vec rot=new Vec(0.05,0,0);
-    if (keyPressed){
-      Quat prev=new Quat();      
-      if(key=='p'){        
-        prev.fromEulerAngles(rot);      
-        scene.eyeFrame().rotate(prev);
-      }
-      if(key=='o'){
-        rot.multiply(-1);
-        prev.fromEulerAngles(rot);      
-        scene.eyeFrame().rotate(prev);
-      }
-    }
+    
+    //Vec baseVector=new Vec(0,0,-1);
+    //Vec dir=new Vec(0,0,0.05);
+    //float rx=Vec.angleBetween(baseVector,new Vec(0,dir.y(),dir.z()));
+    //float ry=Vec.angleBetween(baseVector,new Vec(dir.x(),0,dir.z()));
+    //float rz=Vec.angleBetween(baseVector,new Vec(dir.x(),dir.y(),0));
+    //Vec rot=new Vec(rx,ry,rz);        
+    //if (keyPressed){
+    //  Quat prev=new Quat();      
+    //  if(key=='p'){        
+    //    prev.fromEulerAngles(rot);      
+    //    scene.eyeFrame().rotate(prev);
+    //  }
+    //  if(key=='o'){
+    //    rot.multiply(-1);
+    //    prev.fromEulerAngles(rot);      
+    //    scene.eyeFrame().rotate(prev);
+    //  }
+    //  println(rot);
+    //}
   }
 
   public void toggleFirstPerson() {
@@ -101,32 +107,60 @@ class P3DWindow extends PApplet {
       scene.eyeFrame().setFlySpeed(scene.eyeFrame().flySpeed() * 1.1);
     if (key == '-')
       scene.eyeFrame().setFlySpeed(scene.eyeFrame().flySpeed() / 1.1); 
-    if (key == 'p'){
-      
+        
+    if ((key=='p')||(key=='o')){
+      PVector dir=new PVector(0,0,-1);
+      if(key=='p'){                          
+      }
+      if(key=='o'){
+        dir.mult(-1);        
+      }
+      setEyeDirection(dir);        
+    }
+    
+    if (key=='b'){
+      setEyePosition(new PVector(0,0,100),1);
+      setEyeDirection(new PVector(0,0,-1));
     }
   }
-  public void setEyePosition(PVector pos){
+  public void setEyePosition(PVector pos,float alphaEWMA){
     pos.normalize();
-    pos.mult(100);
+    pos.mult(200);
     pos.x-=100;
     pos.x=-pos.x;
     pos.z=-pos.z;
     pos.x=round(pos.x);
     pos.y=round(pos.y);
     pos.z=round(pos.z);
-    PVector previousPosition=new PVector(this.eyePosition.x(),this.eyePosition.y(),this.eyePosition.z());
-    pos=EWMA(previousPosition,pos,0.4);
-    this.eyePosition.setX(pos.x);
-    this.eyePosition.setY(pos.y);
-    this.eyePosition.setZ(pos.z);          
+    PVector previousPosition=PVectorFromVec(this.eyePosition);
+    pos=EWMA(previousPosition,pos,alphaEWMA);    
+    this.eyePosition=VecFromPVector(pos);
     println("pos:"+pos);
     updatePosition();
   }
   
-  public void updatePosition(){
-    scene.eyeFrame().setPosition(eyePosition);
+  public void setEyeDirection(PVector dir){  
+    PVector previousDirection=PVectorFromVec(this.eyeDirection);
+    dir=EWMA(previousDirection,dir,0.4);
+    this.eyeDirection=VecFromPVector(dir);    
+    updateRotation();    
   }
   
-  public void updateDirection(){
+  public Quat directionToRotation(Vec dir){
+    float rx=Vec.angleBetween(baseVector,new Vec(0,dir.y(),dir.z()));
+    float ry=Vec.angleBetween(baseVector,new Vec(dir.x(),0,dir.z()));
+    float rz=Vec.angleBetween(baseVector,new Vec(dir.x(),dir.y(),0));
+    Quat prev=new Quat(); 
+    Vec rot=new Vec(rx,ry,rz); 
+    prev.fromEulerAngles(rot);
+    return prev;
+  }
+  public void updatePosition(){
+    scene.eyeFrame().setPosition(this.eyePosition);
+  }
+  
+  public void updateRotation(){
+    Quat eyeRotation=directionToRotation(this.eyeDirection);
+    scene.eyeFrame().setRotation(eyeRotation);
   }
 }

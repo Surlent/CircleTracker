@@ -16,7 +16,7 @@ void CreateComponents()
   if (tracker.isTracking())
   {
     if (foundObjects.size()>=3){
-      connectedComponents=new Components(img, tracker.getTrackingBounds());
+      connectedComponents=new Components(img);//, tracker.getTrackingBounds());
     }
     else{
       connectedComponents=new Components(img);
@@ -165,6 +165,14 @@ float IncreasingFunction(float radius){
 // Exponentially weighted moving average
 PVector EWMA(PVector previous,PVector current,float alpha){
   return PVector.add(PVector.mult(previous,1-alpha),PVector.mult(current,alpha));
+}
+
+Vec VecFromPVector(PVector v){
+  return new Vec(v.x,v.y,v.z);
+}
+
+PVector PVectorFromVec(Vec v){
+  return new PVector(v.x(),v.y(),v.z());
 }
 
 void DrawDebugInfo()

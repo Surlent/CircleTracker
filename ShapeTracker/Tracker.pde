@@ -5,16 +5,13 @@ class Tracker {
   PVector position=new PVector(0, 0, 0); // Stores position of composite object (initial and current)
   PVector direction=new PVector(0, 0, 0); // Stores direction of composite object (initial and current)
 
-  // Moving averages parameter for direction
-  float alphaEWMA=0.01;
-
   // Rectangular areas to be scanned for tracking
   ConnectedRectangles trackingBounds;
 
   Trackable trackedObject;
 
   boolean isTracking() {
-    return tracking;
+    return this.tracking;
   }
   void setTrackingBounds(ConnectedRectangles value) {
     this.trackingBounds=value;
@@ -41,12 +38,12 @@ class Tracker {
   }
 
   void toggleTracking() {
-    setTracking(!tracking);
-    trackedObject.tracked=tracking;
+    setTracking(!(this.tracking));
+    trackedObject.tracked=this.tracking;
   }
 
   void update() {
-    if (tracking) {
+    if (this.tracking) {
       //SegmentList closestObject=foundObjects.get(LargestRadiusObjectIndex(foundObjects));
       //int largestRadius=closestObject.getRadius();    
       if (trackedObject.size()==3) {
@@ -56,11 +53,9 @@ class Tracker {
     } else {
     }
   }
-
-  // Updates position based on EWMA technique
+  
   private void updatePosition() {    
-    this.position=trackedObject.centroid;
-    //this.position=EWMA(this.position,trackedObject.centroid,alphaEWMA);    
+    this.position=trackedObject.centroid;//EWMA(this.position,trackedObject.centroid,0.4);      
   }
   private void updateDirection() {
     this.direction=trackedObject.direction;
@@ -80,7 +75,7 @@ class Tracker {
 
   void setCircleTrackingBounds()
   {
-    if (tracking)
+    if (this.tracking)
     {      
       if(trackedObject.size()==3){
         int left=0;

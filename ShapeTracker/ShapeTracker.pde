@@ -22,7 +22,6 @@ void mouseWheel(MouseEvent event) {
   wheelCount = event.getCount();
 }
 
-
 void draw() {
   if (usecam)
   {
@@ -50,21 +49,18 @@ void draw() {
         CreateComponents();
       }
       if (detecting&&tracking)
-      {
-        //FindSquares();
+      {        
         FindCircles();                   
         tracker.setTracking(true);
         tracker.setTrackedObject(foundObjects);
         tracker.update();
-        tracker.setCircleTrackingBounds();                
-        // (
+        tracker.setCircleTrackingBounds();                        
       }
       else{
         tracker.setTracking(false);
       }
       if (detectionButton.isPressed()||trackingButton.isPressed())
-      {
-        //DrawSquareMarkers();
+      {        
         DrawCircleMarkers();
         DrawDebugInfo();
       }
@@ -76,8 +72,8 @@ void draw() {
     frameCounter=1;
   }
   if (tracker.tracking&&tracker.hasCoordinates){   
-    app.setEyePosition(tracker.position);
-    //app.setEyePosition(0,0,100);    
+    app.setEyePosition(tracker.position,0.4);
+    app.setEyeDirection(tracker.direction);    
   }
   
 }
