@@ -102,10 +102,10 @@ String ChooseCamera(String[] cameras) {
     chosenCamera=cameras[0]+",size="+cameraSize+",fps="+desiredFPS;
   }
   String[] sizeInfo=cameraSize.split("x");
-  int cameraWidth=Integer.parseInt(sizeInfo[0]);
-  int cameraHeight=Integer.parseInt(sizeInfo[1]);
-  cameraArea=cameraWidth*cameraHeight;
-  println(cameraArea);
+  actualCameraWidth=Integer.parseInt(sizeInfo[0]);
+  actualCameraHeight=Integer.parseInt(sizeInfo[1]);
+  cameraArea=actualCameraWidth*actualCameraHeight;
+  //println(cameraArea);
   return chosenCamera;
 }
 
@@ -167,6 +167,13 @@ PVector EWMA(PVector previous,PVector current,float alpha){
   return PVector.add(PVector.mult(previous,1-alpha),PVector.mult(current,alpha));
 }
 
+Vec EWMA(Vec previous,Vec current,float alpha){
+  return Vec.add(Vec.multiply(previous,1-alpha),Vec.multiply(current,alpha));
+}
+
+float EWMA(float previous,float current,float alpha){
+  return previous*(1-alpha)+current*alpha;
+}
 Vec VecFromPVector(PVector v){
   return new Vec(v.x,v.y,v.z);
 }
@@ -177,15 +184,15 @@ PVector PVectorFromVec(Vec v){
 
 void DrawDebugInfo()
 {      
-  println ("Components Size:"+((connectedComponents!=null)?(connectedComponents.size()):(0)));
-  println ("Objects Size:"+((foundObjects!=null)?(foundObjects.size()):(0)));
+  //println ("Components Size:"+((connectedComponents!=null)?(connectedComponents.size()):(0)));
+  //println ("Objects Size:"+((foundObjects!=null)?(foundObjects.size()):(0)));
   int i=0;
   if (tracking) {
     if (foundObjects.size()==3){
       for (SegmentList sl : foundObjects) {
         float x=sl.getCentroidX();
         float y=sl.getCentroidY();
-        println("i="+i+",x="+x+",y="+y);
+        //println("i="+i+",x="+x+",y="+y);
         point(x, y);      
         i++;
       }
@@ -198,10 +205,11 @@ void DrawDebugInfo()
         i++;
       }
       stroke(255,255,255);
-      Arrow(trackerPosition,PVector.add(trackerPosition,tracker.trackedObject.direction.mult(100)));
+      Arrow(trackerPosition,PVector.add(trackerPosition,PVector.mult(tracker.trackedObject.direction,100)));
       ellipse(trackerPosition.x,trackerPosition.y,10,10);
       println("Position:"+tracker.position);
-      println("Direction:"+tracker.direction);
+      println("Direction:"+tracker.direction);      
+      
     }
   }
 }

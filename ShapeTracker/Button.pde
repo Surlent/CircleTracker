@@ -20,6 +20,7 @@ class Button
     this.textY=ypos+sheight*0.75;
     this.normalColor=normalColor;
     this.highlightColor=highlightColor;
+    this.textColor=textColor;
     this.pressed=true;
   }
   void setText(String text)

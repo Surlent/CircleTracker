@@ -43,9 +43,7 @@ class Tracker {
   }
 
   void update() {
-    if (this.tracking) {
-      //SegmentList closestObject=foundObjects.get(LargestRadiusObjectIndex(foundObjects));
-      //int largestRadius=closestObject.getRadius();    
+    if (this.tracking) { 
       if (trackedObject.size()==3) {
         updatePosition();
         updateDirection();
@@ -54,11 +52,11 @@ class Tracker {
     }
   }
   
-  private void updatePosition() {    
-    this.position=trackedObject.centroid;//EWMA(this.position,trackedObject.centroid,0.4);      
+  private void updatePosition() {
+    this.position=trackedObject.centroid;    
   }
-  private void updateDirection() {
-    this.direction=trackedObject.direction;
+  private void updateDirection() {    
+    this.direction=trackedObject.direction;    
   }
 
   PVector getPosition() {

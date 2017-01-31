@@ -11,38 +11,35 @@ class Trackable extends Components{
   // Sa version, but with extra information st
   boolean add(SegmentList other){    
     boolean success=super.add(other);
-    
-    // updates position vector
-    updatePosition(other);
-    
-    // updates centroid value       
-    componentAreas.add(other.getArea());   
-    
+    componentCentroids.add(other.getCentroid());
+    componentAreas.add(other.getArea());
     // Three points define a plane, which indicates a direction
-    if(componentCentroids.size()==3){
-      updateDirection();
+    if(this.size()==3){      
+      updatePosition();                                 
+      updateDirection();            
     }
     return success;
   }
   
-  void updatePosition(SegmentList newComponent){
-    PVector otherCentroid=newComponent.getCentroid();
-    
-    // z goes from outside to inside screen, which means a negative value outside
-    otherCentroid.z=1-cameraArea/newComponent.getArea();
-    componentCentroids.add(otherCentroid);           
-    this.centroid.mult(componentCentroids.size()-1);    
-    this.centroid.add(otherCentroid);    
-    this.centroid.div(componentCentroids.size()); 
+  // Update position vector
+  void updatePosition(){
+    this.centroid=new PVector(0,0,0);
+    for(int i=0;i<componentCentroids.size();i++){
+      PVector componentCentroid=componentCentroids.get(i);
+      float componentArea=componentAreas.get(i);
+      componentCentroid.z=1-cameraArea/componentArea;
+      this.centroid.add(componentCentroid);
+    }
+    this.centroid.div(componentCentroids.size());    
   }
   
   // Update direction vector based on new element
   void updateDirection(){    
-    direction=PVector.sub(componentCentroids.get(1),componentCentroids.get(0)).cross(PVector.sub(componentCentroids.get(2),componentCentroids.get(0)));    
-    if(direction.z<0){
-      direction.mult(-1);
+    this.direction=PVector.sub(componentCentroids.get(1),componentCentroids.get(0)).cross(PVector.sub(componentCentroids.get(2),componentCentroids.get(0)));    
+    if(this.direction.z<0){
+      this.direction.mult(-1);
     }
-    direction.normalize();
+    this.direction.normalize();    
   }
   
   PVector getCentroid(){

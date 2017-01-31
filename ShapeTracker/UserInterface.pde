@@ -1,9 +1,9 @@
-void DrawControls() {
-  surface.setSize((int)(img.width*1.5), img.height);
+void DrawControls() {  
+  surface.setSize((int)(img.width*1.5), img.height);  
   hueSlider = new HScrollBar((img.width*1.1), (img.height*0.2), (img.width*0.3), (img.height*0.03), 1, 0, baseHue, baseSaturation, baseBrightness, 4, hueConfidenceInterval); // Initializes slider
   saturationSlider = new HScrollBar((img.width*1.1), (img.height*0.4), (img.width*0.3), (img.height*0.03), 1, 1, hueSlider.getHue(), hueSlider.getSaturation(), hueSlider.getBrightness(), 4, saturationConfidenceInterval); // Initializes slider
   brightnessSlider = new HScrollBar((img.width*1.1), (img.height*0.6), (img.width*0.3), (img.height*0.03), 1, 2, hueSlider.getHue(), hueSlider.getSaturation(), hueSlider.getBrightness(), 4, brightnessConfidenceInterval); // Initializes slider
-  float buttonWidth=img.width*0.11;
+  float buttonWidth=img.width*0.11;  
   detectionButton = new Button((img.width*1.1)+((img.width*0.3)/2-buttonWidth)/2, (img.height*0.8), buttonWidth, (img.height*0.05), "Detect", color(255, 255, 255), color(130, 130, 130), color(0, 0, 0));
   trackingButton = new Button((img.width*1.1)+(img.width*0.15)/2+((img.width*0.3)/2-(buttonWidth))/2, (img.height*0.8), buttonWidth, (img.height*0.05), "Track", color(255, 255, 255), color(130, 130, 130), color(0, 0, 0));
 }
@@ -42,7 +42,7 @@ void UpdateButtons() {
   //{
   //  TrackOnButtonPressed();
   //}
-  if(trackingButton!=null){
+  if (trackingButton!=null) {
     DetectAndTrack();
   }
 }
@@ -83,7 +83,7 @@ void TrackOnButtonPressed() {
   trackingButton.display();
 }
 
-void DetectAndTrack(){
+void DetectAndTrack() {
   detecting=true;
   tracking=true;
   boolean trackingButtonPressed=trackingButton.isPressed();

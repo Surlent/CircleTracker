@@ -14,17 +14,22 @@ String imagename = "equidistantcircles2.png";
 // Starting values for color picker
 float baseHue=180;
 float baseSaturation=100;
-float baseBrightness=60;
+float baseBrightness=50;
 float hueConfidenceInterval=0.3;
 float saturationConfidenceInterval=0.4;
-float brightnessConfidenceInterval=1;//0.6;
+float brightnessConfidenceInterval=0.3;//0.6;
 
 // Limits circles being tracked
-float minCircleRadius=10;
+float minCircleRadius=5;
 float maxCircleRadius=1000;
-
+float minCircleArea=50;
+float maxCircleArea=10000;
 // Camera size
 String cameraSize="640x480";
+
+// Camera dimensions obtained on recording
+int actualCameraWidth;
+int actualCameraHeight;
 
 // Area of camera frame
 int cameraArea;
@@ -65,7 +70,7 @@ float ratioX=1;
 float ratioY=1;
 
 // Sets minimum distances for components to be considered overlappingg
-int overlapDistanceX=0; // Should be set to 0 if no space between pixels is allowed
+int overlapDistanceX=5; // Should be set to 0 if no space between pixels is allowed
 int overlapDistanceY=1; // Should be set to 1 if no space between pixels is allowed
 
 // Color array for drawing the components

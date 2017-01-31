@@ -21,10 +21,10 @@ void FindCircles()
       radius=(int)CircleRadiusFromPerimeter(perimeter);
       minCircularity=AcceptableCircleCircularity(radius,0.4);
       maxCircularity=AcceptableCircleCircularity(radius,1.5);
-      minArea=AcceptableCircleArea(radius,0.2);      
-      maxArea=AcceptableCircleArea(radius,3);
-      
-      if ((radius<=maxRadius)&&(radius>=minRadius)&&(area<=maxArea)&&(area>=minArea)
+      minArea=minCircleArea;//AcceptableCircleArea(radius,0.2);      
+      maxArea=maxCircleArea;//AcceptableCircleArea(radius,3);      
+      if ((radius<=maxRadius)&&(radius>=minRadius)&&
+      (area<=maxArea)&&(area>=minArea)
       //&&(circularity<=maxCircularity)&&(circularity>=minCircularity)
       )
       {
@@ -206,7 +206,7 @@ void DrawCircleMarkers()
           rect(ratioX*sl.getCentroidX()-ratioX*radius, ratioY*sl.getCentroidY()-ratioY*radius, ratioX*radius*2, ratioY*radius*2);
           fill(color(0,255,0,100));
           //textFont(f,18);
-          text(radius,ratioX*sl.getCentroidX(),ratioY*sl.getCentroidY());
+          text(sl.getArea(),ratioX*sl.getCentroidX(),ratioY*sl.getCentroidY());
           //textFont(f,14);
           j++; 
       }  

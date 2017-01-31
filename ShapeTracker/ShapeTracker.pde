@@ -6,7 +6,7 @@ void setup() {
   } else {
     img = loadImage(imagename);
     if (img!=null)
-    {
+    {      
       DrawControls();
     } else
     {
@@ -30,7 +30,7 @@ void draw() {
       img=cam;
       if (!resized)
       {
-        println("Camera loaded");
+        println("Camera loaded");   
         DrawControls();
         resized=true;
       }
@@ -42,8 +42,8 @@ void draw() {
   if (((frameCounter)<=fps/desiredFPS&&(fps>desiredFPS))||(fps<=desiredFPS))
   {  
     if (img!=null)
-    {
-      image (img, 0, 0);
+    {      
+      image (img, 0, 0);      
       if (detecting)
       {
         CreateComponents();
@@ -63,7 +63,7 @@ void draw() {
       {        
         DrawCircleMarkers();
         DrawDebugInfo();
-      }
+      }      
     }
   } 
   frameCounter++; 
@@ -72,8 +72,9 @@ void draw() {
     frameCounter=1;
   }
   if (tracker.tracking&&tracker.hasCoordinates){   
-    app.setEyePosition(tracker.position,0.4);
-    app.setEyeDirection(tracker.direction);    
+    app.setEyePosition(tracker.position,0.3);
+    //app.setEyePosition(new PVector(actualCameraWidth/2,actualCameraHeight/2,300),0.3);
+    app.setEyeDirection(tracker.direction,0.1);    
   }
   
 }
