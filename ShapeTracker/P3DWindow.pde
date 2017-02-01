@@ -156,7 +156,7 @@ class P3DWindow extends PApplet {
 
   public Vec directionToEulerAngles(Vec dir, Vec up) {        
     // these values are named and calculated according to airplane flight conventions
-    float pitch=asin(-dir.y());  
+    float pitch=asin(dir.y());  
     float heading=atan2(dir.x(), dir.z());
 
     /* 

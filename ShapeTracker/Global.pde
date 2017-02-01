@@ -14,7 +14,7 @@ String imagename = "equidistantcircles2.png";
 // Starting values for color picker
 float baseHue=180;
 float baseSaturation=100;
-float baseBrightness=50;
+float baseBrightness=100;
 float hueConfidenceInterval=0.3;
 float saturationConfidenceInterval=0.4;
 float brightnessConfidenceInterval=0.3;//0.6;
@@ -36,7 +36,7 @@ int cameraArea;
 
 // Frames per second, if available for current camera size
 int fps;
-int desiredFPS=10;
+int desiredFPS=15;
 
 boolean resized=false;
 int frameCounter=1;
