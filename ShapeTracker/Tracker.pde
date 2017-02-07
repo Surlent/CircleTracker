@@ -51,12 +51,13 @@ class Tracker {
     } else {
     }
   }
-  
+
   private void updatePosition() {
-    this.position=trackedObject.centroid;    
+    this.position=trackedObject.centroid;
   }
+
   private void updateDirection() {    
-    this.direction=trackedObject.direction;    
+    this.direction=trackedObject.direction;
   }
 
   PVector getPosition() {
@@ -75,7 +76,7 @@ class Tracker {
   {
     if (this.tracking)
     {      
-      if(trackedObject.size()==3){
+      if (trackedObject.size()==3) {
         int left=0;
         int top=(trackedObject.size()>0)?(trackedObject.get(0).get(0).y):(0);
         int w=img.width, h=0;

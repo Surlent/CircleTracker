@@ -6,57 +6,53 @@ class SegmentList extends ArrayList<Segment> {
   float centroidY=0;
   float perimeter=0;
   float area=0;
-  
-  public int getRadius(){
-     return (int)CircleRadiusFromPerimeter((int)(this.perimeter));
+
+  public int getRadius() {
+    return (int)CircleRadiusFromPerimeter((int)(this.perimeter));
   }
-  public float getCircularity()
-  {
+
+  public float getCircularity() {
     float p=getPerimeter();
     float a=getArea();
     return (a)/(p*p);
   }
-  public int getCentroidX()
-  {
+
+  public int getCentroidX() {
     return (int)centroidX;
   }
-  public int getCentroidY()
-  {
+
+  public int getCentroidY() {
     return (int)centroidY;
   } 
-  public PVector getCentroid(){
-    return new PVector(centroidX,centroidY);
+
+  public PVector getCentroid() {
+    return new PVector(centroidX, centroidY);
   }
-  
-  public int getCentroidXBrute()
-  {
+
+  public int getCentroidXBrute() {
     float sumX=0;
-    for (Segment s:this)
-    {
+    for (Segment s : this) {
       sumX+=s.xcenter();
     }
     return (int)(sumX/this.size());
   }
-  public int getCentroidYBrute()
-  {
+
+  public int getCentroidYBrute() {
     float sumY=0;
-    for (Segment s:this)
-    {
+    for (Segment s : this) {
       sumY+=s.y;
     }
     return (int)(sumY/this.size());
   }
-  
-  public int getPerimeter()
-  {
+
+  public int getPerimeter() {
     return (int)this.perimeter;
   }
-  
-  public int getArea()
-  {
+
+  public int getArea() {
     return (int)this.area;
   }
-  
+
   // Tests whether the segment list contains segments in non-decreasing
   // order of y
   boolean yMonotonic () {
@@ -67,42 +63,38 @@ class SegmentList extends ArrayList<Segment> {
     }
     return true;
   }
-  
-  public boolean add(Segment e)
-  {
+
+  public boolean add(Segment e) {
     // Tracks centroid during addition of e
     updateCentroidOnAdd(e);
     updateDiscretePerimeterOnAdd(e);
     updateDiscreteAreaOnAdd(e);
     return super.add(e);
   }
-  public boolean remove(Segment e)
-  {
+
+  public boolean remove(Segment e) {
     return super.remove(e);
   }
-  private void updateDiscretePerimeterOnAdd(Segment e)
-  {
+
+  private void updateDiscretePerimeterOnAdd(Segment e) {
     perimeter+=2*e.getLength()+2; // Perimeter of segment for height of pixel equal to 1
-    for (int i=this.size()-1;i>=0;i--)
-    {
+    for (int i=this.size()-1; i>=0; i--) {
       // Since list is y-monotonic
-      if (e.y-this.get(i).y>overlapDistanceY)
-      {break;}
+      if (e.y-this.get(i).y>overlapDistanceY) {
+        break;
+      }
       // Subtract overlapping lengths
-      if (this.get(i).overlap(e,overlapDistanceX,overlapDistanceY))
-      {
-        perimeter-=2*this.get(i).overlappingLength(e);        
+      if (this.get(i).overlap(e, overlapDistanceX, overlapDistanceY)) {
+        perimeter-=2*this.get(i).overlappingLength(e);
       }
     }
   }
-  
-  private void updateDiscreteAreaOnAdd(Segment e)
-  {
+
+  private void updateDiscreteAreaOnAdd(Segment e) {
     this.area+=e.getLength();
   }
-  
-  private void updateCentroidOnAdd(Segment e)
-  {
+
+  private void updateCentroidOnAdd(Segment e) {
     int currentSize=this.size();
     int currentSizePlus=currentSize+1;
     centroidX=(float)(((centroidX*currentSize)+e.xcenter())/(currentSizePlus));
@@ -121,8 +113,7 @@ class SegmentList extends ArrayList<Segment> {
     while (i < n && j < m) {
       if (get(i).y < other.get(j).y) {
         ret.add(get(i++));
-      }
-      else {
+      } else {
         ret.add(other.get(j++));
       }
     }
@@ -131,5 +122,4 @@ class SegmentList extends ArrayList<Segment> {
     //assert (ret.size() == n+m);
     return ret;
   }
-  
 };

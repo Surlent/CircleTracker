@@ -13,13 +13,8 @@ void setup() {
       exit();
     }
   }
-  
-  app=new P3DWindow();
-}
 
-// Triggers control bar resize on mouse wheel motion
-void mouseWheel(MouseEvent event) {
-  wheelCount = event.getCount();
+  app=new P3DWindow();
 }
 
 void draw() {
@@ -54,16 +49,15 @@ void draw() {
         tracker.setTracking(true);
         tracker.setTrackedObject(foundObjects);
         tracker.update();
-        tracker.setCircleTrackingBounds();                        
-      }
-      else{
+        tracker.setCircleTrackingBounds();
+      } else {
         tracker.setTracking(false);
       }
       if (detectionButton.isPressed()||trackingButton.isPressed())
       {        
         DrawCircleMarkers();
         DrawDebugInfo();
-      }      
+      }
     }
   } 
   frameCounter++; 
@@ -71,10 +65,8 @@ void draw() {
   {
     frameCounter=1;
   }
-  if (tracker.tracking&&tracker.hasCoordinates){   
-    app.setEyePosition(tracker.position,0.3);
-    //app.setEyePosition(new PVector(actualCameraWidth/2,actualCameraHeight/2,300),0.3);
-    app.setEyeDirection(tracker.direction,0.1);    
+  if (tracker.tracking&&tracker.hasCoordinates) {   
+    app.setEyePosition(tracker.position, 0.3);
+    app.setEyeDirection(tracker.direction, 0.1);
   }
-  
 }

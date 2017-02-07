@@ -100,3 +100,8 @@ void DetectAndTrack() {
   tracking=trackingButton.isPressed();
   trackingButton.display();
 }
+
+// Triggers control bar resize on mouse wheel motion
+void mouseWheel(MouseEvent event) {
+  wheelCount = event.getCount();
+}

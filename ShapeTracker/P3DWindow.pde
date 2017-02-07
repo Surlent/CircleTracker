@@ -132,11 +132,14 @@ class P3DWindow extends PApplet {
     //pos.x-=200;    
     //pos.y*=400;
     ////pos.y-=200;
-    pos.z*=0.3;
-    pos.z=-pos.z;    
+    //centering
+    pos.z-=0.5; 
     pos.x-=actualCameraWidth/2;
-    pos.x=-pos.x;
     pos.y-=actualCameraHeight/2;
+    
+    pos.z*=300;
+    //pos.z=-pos.z;        
+    pos.x=-pos.x;    
     PVector previousPosition=PVectorFromVec(this.eyePosition);
     //pos=EWMA(previousPosition,pos,alphaEWMA);
     pos.x=EWMA(previousPosition.x, pos.x, alphaEWMA);
