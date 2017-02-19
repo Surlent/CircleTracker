@@ -1,3 +1,13 @@
+import java.util.Comparator;
+import java.util.Collections;
+
+public class SizeComparator implements Comparator<SegmentList> {
+    @Override
+    public int compare(SegmentList o1, SegmentList o2) {
+        return o2.getArea()-o1.getArea();
+    }
+}
+
 // Tests whether a color is defined within given bounds
 boolean HasRightColor (color c) {
   colorMode(HSB, 360, 100, 100);

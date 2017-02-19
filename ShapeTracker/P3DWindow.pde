@@ -41,7 +41,7 @@ class P3DWindow extends PApplet {
   void draw() {
     background(0);
     fill(204, 102, 0, 150);
-    scene.drawTorusSolenoid(10, 20f);
+    scene.drawTorusSolenoid(10, 100f);
 
     // Save the current model view matrix
     pushMatrix();
@@ -137,8 +137,8 @@ class P3DWindow extends PApplet {
     pos.x-=actualCameraWidth/2;
     pos.y-=actualCameraHeight/2;
     
-    pos.z*=300;
-    //pos.z=-pos.z;        
+    pos.z*=0.6;
+    pos.z=-pos.z;        
     pos.x=-pos.x;    
     PVector previousPosition=PVectorFromVec(this.eyePosition);
     //pos=EWMA(previousPosition,pos,alphaEWMA);

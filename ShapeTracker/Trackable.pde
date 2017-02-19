@@ -27,7 +27,7 @@ class Trackable extends Components {
     for (int i=0; i<componentCentroids.size(); i++) {
       PVector componentCentroid=componentCentroids.get(i);
       float componentArea=componentAreas.get(i);
-      componentCentroid.z=1-sqrt(componentArea/cameraArea); // Calculates depth based on lens equation      
+      componentCentroid.z=1-cameraArea/componentArea;//sqrt(componentArea/cameraArea); // Calculates depth based on lens equation      
       this.centroid.add(componentCentroid);
     }
     this.centroid.div(componentCentroids.size());
