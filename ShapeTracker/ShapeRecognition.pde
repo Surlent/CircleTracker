@@ -192,9 +192,9 @@ void DrawCircleMarkers() {
   if (tracker.isTracking()) {      
     fill(color(255, 0, 0, 50));
     ConnectedRectangles trackingBounds = tracker.getTrackingBounds();      
-    for (Rectangle r : trackingBounds) {
+    /*for (Rectangle r : trackingBounds) {
       rect(ratioX*r.getX(), ratioY*r.getY(), ratioX*r.getWidth(), ratioY*r.getHeight());
-    }
+    }*/
   }
 }
 

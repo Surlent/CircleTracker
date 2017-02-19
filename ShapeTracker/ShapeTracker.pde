@@ -67,6 +67,6 @@ void draw() {
   }
   if (tracker.tracking&&tracker.hasCoordinates) {   
     app.setEyePosition(tracker.position, 0.3);
-    app.setEyeDirection(tracker.direction, 0.3);
+    app.setEyeDirection(tracker.direction, 0.2);
   }
 }

@@ -16,8 +16,8 @@ float baseHue=180;
 float baseSaturation=100;
 float baseBrightness=100;
 float hueConfidenceInterval=0.3;
-float saturationConfidenceInterval=0.4;
-float brightnessConfidenceInterval=0.3;//0.6;
+float saturationConfidenceInterval=0.2;
+float brightnessConfidenceInterval=0.7;//0.6;
 
 // Limits circles being tracked
 float minCircleRadius=5;
